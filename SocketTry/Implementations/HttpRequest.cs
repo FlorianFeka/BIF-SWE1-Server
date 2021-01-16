@@ -38,6 +38,7 @@ namespace SocketTry.Implementations
 
         private HttpParsingState _parsingState = HttpParsingState.MetaData;
 
+        /// <exception cref="Exception"></exception>
         public bool ParseChunk(string[] chunk, string nextChunk)
         {
             if (chunk == null) return false;
@@ -87,6 +88,7 @@ namespace SocketTry.Implementations
             return value;
         }
 
+        /// <exception cref="Exception"></exception>
         private void ProcessMetaData(string line)
         {
             if (string.IsNullOrEmpty(line)) return;
@@ -104,6 +106,7 @@ namespace SocketTry.Implementations
             _parsingState = HttpParsingState.Header;
         }
 
+        /// <exception cref="Exception"></exception>
         private void ProcessHeader(string headerData)
         {
             var fields = headerData.Split(": ");

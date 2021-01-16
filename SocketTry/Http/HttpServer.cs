@@ -8,15 +8,20 @@ namespace SocketTry.Http
     public class HttpServer : IDisposable
     {
         private Socket _listener;
+        private bool _listening = true;
 
         public void Dispose()
         {
+            _listening = false;
             _listener.Close();
         }
 
         public void Start(IPEndPoint endPoint)
         {
             _listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            _listener.NoDelay = true;
+            _listener.Blocking = false;
+            _listener.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
             _listener.Bind(endPoint);
             _listener.Listen(100);
 
@@ -31,14 +36,20 @@ namespace SocketTry.Http
 
         public void HandleAccept(IAsyncResult result)
         {
-            Socket socket = _listener.EndAccept(result);
-            socket.NoDelay = true;
-            socket.Blocking = false;
-            Console.WriteLine($"Accepted Connection from {socket.RemoteEndPoint}");
+            if (!_listening) return;
+            try
+            {
+                Socket socket = _listener.EndAccept(result);
+                Console.WriteLine($"Accepted Connection from {socket.RemoteEndPoint}");
 
-            new HttpHandler(socket, 4096);
+                new HttpHandler(socket, 4096, 4096);
 
-            BeginAccept();
+                BeginAccept();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
     }
 }
