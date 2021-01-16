@@ -16,10 +16,11 @@ namespace SocketTry.Handler
         private int _receiveBufferSize;
 
 
-        private MemoryStream _data = new MemoryStream();
+        private MemoryStream _receiveData = new MemoryStream();
         private string _leftOverContent;
         private HttpRequest _httpRequest = new HttpRequest();
 
+        private string _sendData;
         private byte[] _sendBuffer;
         private int _sendBufferSize;
 
@@ -71,7 +72,10 @@ namespace SocketTry.Handler
                 return;
             }
 
-            _data.Write(_receiveBuffer, 0, _receiveBuffer.Length);
+            _receiveData.Write(_receiveBuffer, 0, _receiveBuffer.Length);
+            var recStr = Encoding.ASCII.GetString(_receiveBuffer);
+            Console.WriteLine(recStr);
+
 
             //Receive(_receiveBuffer);
 
@@ -81,8 +85,8 @@ namespace SocketTry.Handler
                 {
                     if (_httpRequest.ParseChunk(lines, _leftOverContent))
                     {
-                        string content = Encoding.ASCII.GetString(_data.ToArray());
-                        Console.WriteLine(content);
+                        string content = Encoding.ASCII.GetString(_receiveData.ToArray());
+                        //Console.WriteLine(content);
                         var answer = "HTTP/1.1 200 OK\nConnection: keep-alive\nContent-Type: text/plain\n";
                         var co = "<h1>Test</h1>";
                         answer += $"Content-Length: {co.Length}\n\n{co}";
@@ -117,13 +121,12 @@ namespace SocketTry.Handler
 
         private void SendBuffer()
         {
-            _socket.BeginSend(_sendBuffer, 0, _sendBufferSize);
+            _socket.BeginSend(_sendBuffer, 0, _sendBufferSize, SocketFlags.None, new AsyncCallback(HandleSend), null);
         }
-
-        public abstract bool Receive(byte[] buffer);
 
         private void HandleSend(IAsyncResult result)
         {
+            ClearForNewRequest();
             if (!_listening) return;
             try
             {
@@ -135,6 +138,15 @@ namespace SocketTry.Handler
                 Dispose();
             }
         }
+
+        private void ClearForNewRequest()
+        {
+            _leftOverContent = "";
+            _httpRequest = new HttpRequest();
+            _receiveData = new MemoryStream();
+        }
+
+        public abstract bool Receive(byte[] buffer);
 
         private bool TryGetLinesFromChunk(byte[] buffer, out string[] usableDataLines)
         {
