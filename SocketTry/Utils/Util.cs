@@ -12,6 +12,7 @@ namespace SocketTry.Utils
             if (int.TryParse(s, out i)) return i;
             return null;
         }
+
         public static HttpMethod ProcessMethod(string methodString)
         {
             bool success = Enum.TryParse(methodString, out HttpMethod method);
@@ -20,6 +21,16 @@ namespace SocketTry.Utils
                 return method;
             }
             throw new ArgumentException("Invalid or no HTTP method!");
+        }
+
+        public static void FillEmptySpaceWith<T>(T[] arr, T fill, int from)
+        {
+            if (from >= arr.Length) throw new Exception($"{nameof(from)} is greater then the length of {nameof(arr)}");
+
+            for(int i = from; i < arr.Length; i++)
+            {
+                arr[i] = fill;
+            }
         }
 
         /// <summary>

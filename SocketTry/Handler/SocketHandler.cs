@@ -1,6 +1,6 @@
 ﻿using SocketTry.Implementations;
+using SocketTry.Utils;
 using System;
-using System.IO;
 using System.Net.Sockets;
 using System.Text;
 
@@ -15,14 +15,14 @@ namespace SocketTry.Handler
         private byte[] _receiveBuffer;
         private int _receiveBufferSize;
 
-
-        private MemoryStream _receiveData = new MemoryStream();
         private string _leftOverContent;
         private HttpRequest _httpRequest = new HttpRequest();
 
-        private string _sendData;
-        private byte[] _sendBuffer;
+        private int _sendRound = 0;
+        private byte[] _sendData;
         private int _sendBufferSize;
+
+        private readonly byte _endOfString = (byte)'\0';
 
         public SocketHandler(Socket socket, int receiveBufferSize, int sendBufferSize)
         {
@@ -72,12 +72,11 @@ namespace SocketTry.Handler
                 return;
             }
 
-            _receiveData.Write(_receiveBuffer, 0, _receiveBuffer.Length);
             var recStr = Encoding.ASCII.GetString(_receiveBuffer);
             Console.WriteLine(recStr);
 
 
-            //Receive(_receiveBuffer);
+            //if (Receive(_receiveBuffer)) BeginReceive();
 
             if (TryGetLinesFromChunk(_receiveBuffer, out var lines))
             {
@@ -85,16 +84,15 @@ namespace SocketTry.Handler
                 {
                     if (_httpRequest.ParseChunk(lines, _leftOverContent))
                     {
-                        string content = Encoding.ASCII.GetString(_receiveData.ToArray());
-                        //Console.WriteLine(content);
-                        var answer = "HTTP/1.1 200 OK\nConnection: keep-alive\nContent-Type: text/plain\n";
+                        var answer = "HTTP/1.1 200 OK\nConnection: keep-alive\nContent-Type: text/html\n";
                         var co = "<h1>Test</h1>";
                         answer += $"Content-Length: {co.Length}\n\n{co}";
                         var a = Encoding.ASCII.GetBytes(answer);
                         try
                         {
-                            _socket.BeginSend(a, 0, a.Length, SocketFlags.None,
-                            new AsyncCallback(HandleSend), null);
+                            //_socket.BeginSend(a, 0, a.Length, SocketFlags.None,
+                            //new AsyncCallback(HandleSend), null);
+                            Send(a);
                         }
                         catch (Exception e)
                         {
@@ -109,28 +107,21 @@ namespace SocketTry.Handler
                     Dispose();
                 }
             }
-
             BeginReceive();
         }
 
         public void Send(byte[] data)
         {
-            _sendBuffer = data;
+            _sendData = data;
             SendBuffer();
         }
 
         private void SendBuffer()
         {
-            _socket.BeginSend(_sendBuffer, 0, _sendBufferSize, SocketFlags.None, new AsyncCallback(HandleSend), null);
-        }
-
-        private void HandleSend(IAsyncResult result)
-        {
-            ClearForNewRequest();
-            if (!_listening) return;
             try
             {
-                _socket.EndSend(result);
+                var lastPart = CreateSendBuffer(out var buffer);
+                _socket.BeginSend(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(HandleSend), lastPart);
             }
             catch (Exception e)
             {
@@ -139,13 +130,65 @@ namespace SocketTry.Handler
             }
         }
 
+        /// <summary>
+        /// Creates a byte array which is part of the data to be sent
+        /// and fills the empty space if there is any with \0 (end of string)
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <returns>returns <c>true</c> if the created buffer is the last one to be created, otherwise it returns <c>false</c></returns>
+        /// <exception cref="Exception">throws exception when the configured send_buffer_size is bellow 1</exception>
+        private bool CreateSendBuffer(out byte[] buffer)
+        {
+            if (_sendBufferSize < 1) throw new Exception("Too small send_buffer!");
+
+            int from = _sendBufferSize * _sendRound;
+            from = from != 0 ? from++ : 0;
+            if (from >= _sendData.Length) throw new Exception("Data should already be sent!");
+
+            var len = _sendBufferSize;
+            len = len < _sendData.Length ? len : _sendData.Length - from;
+
+            buffer = new byte[_sendBufferSize];
+
+            Array.Copy(_sendData, from, buffer, 0, len);
+
+            if (len < _sendBufferSize) Util.FillEmptySpaceWith<byte>(buffer, _endOfString, len);
+
+            _sendRound++;
+            return (from + len) == _sendData.Length;
+        }
+
+        private void HandleSend(IAsyncResult result)
+        {
+            if (!_listening) return;
+            try
+            {
+                _socket.EndSend(result);
+                var lastPart = result.AsyncState as bool?;
+                if (lastPart.HasValue && lastPart.Value)
+                {
+                    ClearForNewRequest();
+                    return;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                Dispose();
+            }
+            SendBuffer();
+        }
+
         private void ClearForNewRequest()
         {
             _leftOverContent = "";
             _httpRequest = new HttpRequest();
-            _receiveData = new MemoryStream();
+
+            _sendData = null;
+            _sendRound = 0;
         }
 
+        /// <returns>returns <c>true</c> if to continue receiving, otherwise returns <c>false</c></returns>
         public abstract bool Receive(byte[] buffer);
 
         private bool TryGetLinesFromChunk(byte[] buffer, out string[] usableDataLines)
