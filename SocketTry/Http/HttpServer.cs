@@ -1,7 +1,11 @@
 ﻿using SocketTry.Handler;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using System.Reflection;
+using System.Linq;
+using SocketTry.Attributes;
 
 namespace SocketTry.Http
 {
@@ -9,6 +13,20 @@ namespace SocketTry.Http
     {
         private Socket _listener;
         private bool _listening = true;
+        private Assembly _entryAssembly;
+
+        private struct ControllerAttributesDto
+        {
+            public Type Type;
+            public object[] Attributes;
+        }
+
+        private struct ControllerFunctionAttributeDto
+        {
+            public ControllerAttributesDto Controller;
+            public MethodInfo MethodInfo;
+            public object[] Attributes;
+        }
 
         public void Dispose()
         {
@@ -24,6 +42,9 @@ namespace SocketTry.Http
             _listener.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
             _listener.Bind(endPoint);
             _listener.Listen(100);
+
+            _entryAssembly = Assembly.GetEntryAssembly();
+            LoadControllers();
 
             Console.WriteLine($"Server listening on {endPoint}");
             BeginAccept();
@@ -50,6 +71,42 @@ namespace SocketTry.Http
             {
                 Console.WriteLine(e);
             }
+        }
+
+
+        private void LoadControllers()
+        {
+            var controllers = FindControllers();
+            var handlers = FindHttpHandlers(controllers);
+        }
+
+        private IEnumerable<ControllerFunctionAttributeDto> FindHttpHandlers(IEnumerable<ControllerAttributesDto> controllers)
+        {
+            return
+                from controller in controllers
+                from func in controller.Type.GetMethods()
+                let attributes = func.GetCustomAttributes(typeof(HttpVerbAttribute), true)
+                where attributes != null && attributes.Length > 0
+                select new ControllerFunctionAttributeDto
+                {
+                    Controller = controller,
+                    MethodInfo = func,
+                    Attributes = attributes
+                };
+
+        }
+
+        private IEnumerable<ControllerAttributesDto> FindControllers()
+        {
+            return
+                from type in _entryAssembly.GetTypes()
+                let attributes = type.GetCustomAttributes(typeof(ControllerDataAttribute), true)
+                where attributes != null && attributes.Length > 0
+                select new ControllerAttributesDto
+                {
+                    Type = type,
+                    Attributes = attributes
+                };
         }
     }
 }

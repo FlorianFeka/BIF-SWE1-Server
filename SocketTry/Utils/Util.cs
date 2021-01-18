@@ -12,7 +12,7 @@ namespace SocketTry.Utils
             if (int.TryParse(s, out i)) return i;
             return null;
         }
-
+        
         public static HttpMethod ProcessMethod(string methodString)
         {
             bool success = Enum.TryParse(methodString, out HttpMethod method);
