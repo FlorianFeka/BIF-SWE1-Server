@@ -39,6 +39,7 @@ namespace SocketTry.Implementations
         private HttpParsingState _parsingState = HttpParsingState.MetaData;
 
         /// <exception cref="Exception"></exception>
+        /// <returns>returns <c>true</c> if it parsed the last chunk, otherwise returns <c>false</c></returns>
         public bool ParseChunk(string[] chunk, string nextChunk)
         {
             if (chunk == null) return false;

@@ -15,9 +15,6 @@ namespace SocketTry.Handler
         private byte[] _receiveBuffer;
         private int _receiveBufferSize;
 
-        private string _leftOverContent;
-        private HttpRequest _httpRequest = new HttpRequest();
-
         private int _sendRound = 0;
         private byte[] _sendData;
         private int _sendBufferSize;
@@ -76,37 +73,7 @@ namespace SocketTry.Handler
             Console.WriteLine(recStr);
 
 
-            //if (Receive(_receiveBuffer)) BeginReceive();
-
-            if (TryGetLinesFromChunk(_receiveBuffer, out var lines))
-            {
-                try
-                {
-                    if (_httpRequest.ParseChunk(lines, _leftOverContent))
-                    {
-                        var answer = "HTTP/1.1 200 OK\nConnection: keep-alive\nContent-Type: text/html\n";
-                        var co = "<h1>Test</h1>";
-                        answer += $"Content-Length: {co.Length}\n\n{co}";
-                        var a = Encoding.ASCII.GetBytes(answer);
-                        try
-                        {
-                            //_socket.BeginSend(a, 0, a.Length, SocketFlags.None,
-                            //new AsyncCallback(HandleSend), null);
-                            Send(a);
-                        }
-                        catch (Exception e)
-                        {
-                            Console.WriteLine(e.ToString());
-                            Dispose();
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.ToString());
-                    Dispose();
-                }
-            }
+            Receive(_receiveBuffer);
             BeginReceive();
         }
 
@@ -167,7 +134,7 @@ namespace SocketTry.Handler
                 var lastPart = result.AsyncState as bool?;
                 if (lastPart.HasValue && lastPart.Value)
                 {
-                    ClearForNewRequest();
+                    ClearForNewSend();
                     return;
                 }
             }
@@ -179,34 +146,10 @@ namespace SocketTry.Handler
             SendBuffer();
         }
 
-        private void ClearForNewRequest()
+        private void ClearForNewSend()
         {
-            _leftOverContent = "";
-            _httpRequest = new HttpRequest();
-
             _sendData = null;
             _sendRound = 0;
-        }
-
-        /// <returns>returns <c>true</c> if to continue receiving, otherwise returns <c>false</c></returns>
-        public abstract bool Receive(byte[] buffer);
-
-        private bool TryGetLinesFromChunk(byte[] buffer, out string[] usableDataLines)
-        {
-            var chunkData = Encoding.ASCII.GetString(buffer);
-            chunkData = chunkData.Replace("\r", "");
-            chunkData = chunkData.Replace("\0", "");
-
-            var content = _leftOverContent + chunkData;
-            var positionOfLastNewLine = content.LastIndexOf("\n");
-            usableDataLines = null;
-
-            if (positionOfLastNewLine == -1) return false;
-
-            var usableData = content.Substring(0, positionOfLastNewLine);
-            usableDataLines = usableData.Split("\n");
-            _leftOverContent = content.Substring(positionOfLastNewLine + 1);
-            return true;
         }
 
         public void Dispose()
@@ -218,5 +161,7 @@ namespace SocketTry.Handler
                 _socket.Close(100);
             }
         }
+
+        public abstract void Receive(byte[] buffer);
     }
 }
