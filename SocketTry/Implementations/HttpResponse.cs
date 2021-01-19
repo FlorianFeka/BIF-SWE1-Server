@@ -9,7 +9,12 @@ namespace SocketTry.Implementations
 {
     internal class HttpResponse : IResponse
     {
-        public IDictionary<string, string> Headers { get; } = new Dictionary<string, string>();
+        public IDictionary<string, string> Headers { get; } = new Dictionary<string, string>()
+        {
+            { HttpMeta.Headers.DATE, DateTime.UtcNow.ToString("ddd, dd MMM yyyy HH:mm:ss", CultureInfo.CreateSpecificCulture("en-US")) + " GMT" },
+            { HttpMeta.Headers.SERVER, "Some_random_server/0.1" },
+            { HttpMeta.Headers.CONNECTION, "keep-alive" }
+        };
 
         public int ContentLength { get => ContentBytes.Length; }
 

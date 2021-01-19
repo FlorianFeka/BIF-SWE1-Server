@@ -1,15 +1,16 @@
 ﻿namespace SocketTry.Http
 {
-    internal static class HttpMeta
+    public static class HttpMeta
     {
-        // HTTP/1.1 defines the sequence CR LF as the end-of-line marker
-        internal const string EOL = "\r\n";
-        internal const string VERSION = "HTTP/1.1";
-        internal static class Headers
+        public const string VERSION = "HTTP/1.1";
+        public static class Headers
         {
-            internal const string USER_AGENT = "User-Agent";
-            internal const string CONTENT_LENGTH = "Content-Length";
-            internal const string CONTENT_TYPE = "Content-Type";
+            public const string USER_AGENT = "User-Agent";
+            public const string CONTENT_LENGTH = "Content-Length";
+            public const string CONTENT_TYPE = "Content-Type";
+            public const string CONNECTION = "Connection";
+            public const string SERVER = "Server";
+            public const string DATE = "Date";
         }
     }
 }
