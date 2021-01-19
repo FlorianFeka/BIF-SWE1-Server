@@ -77,7 +77,6 @@ namespace SocketTry.Http
                 if (!baseRoute.StartsWith("/")) baseRoute = "/" + baseRoute;
                 var httpMethods = GetHttpMethods(controller.Type);
                 LoadHttpFunctions(controller.Type, baseRoute, httpMethods);
-
             }
 
             StartFirstAccept();

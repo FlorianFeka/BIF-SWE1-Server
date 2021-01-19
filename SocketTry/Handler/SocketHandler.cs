@@ -28,11 +28,9 @@ namespace SocketTry.Handler
             _receiveBufferSize = receiveBufferSize;
             _sendBufferSize = sendBufferSize;
             _receiveBuffer = new byte[_receiveBufferSize];
-
-            BeginReceive();
         }
 
-        private void BeginReceive()
+        protected void BeginReceive()
         {
             if (!_listening) return;
             try

@@ -1,7 +1,12 @@
-﻿using SocketTry.Implementations;
+﻿using SocketTry.Http;
+using SocketTry.Implementations;
 using System;
+using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Text;
+using System.Linq;
+using static SocketTry.Http.HttpServer;
+using SocketTry.Utils;
 
 namespace SocketTry.Handler
 {
@@ -9,8 +14,13 @@ namespace SocketTry.Handler
     {
         private string _leftOverContent;
         private HttpRequest _httpRequest = new HttpRequest();
+        private Dictionary<HttpMethod, Dictionary<string, HttpVerbMethod>> _handlers;
 
-        internal HttpHandler(Socket socket, int receiveBufferSize, int sendBufferSize) : base(socket, receiveBufferSize, sendBufferSize) { }
+        internal HttpHandler(Socket socket, int receiveBufferSize, int sendBufferSize, Dictionary<HttpMethod, Dictionary<string, HttpVerbMethod>> handlers) : base(socket, receiveBufferSize, sendBufferSize)
+        {
+            _handlers = handlers;
+            BeginReceive();
+        }
 
         internal override void Receive(byte[] buffer)
         {
@@ -20,7 +30,34 @@ namespace SocketTry.Handler
                 {
                     if (_httpRequest.ParseChunk(lines, _leftOverContent))
                     {
-                        ClearForNewRequest();
+                        HttpVerbMethod? handler = null;
+                        string routeSuffix = null;
+                        if(_httpRequest.Method.HasValue && !string.IsNullOrEmpty(_httpRequest.Url.Path))
+                        {
+                            handler = GetHttpMethodHandler(_httpRequest.Method.Value, _httpRequest.Url.Path, out routeSuffix);
+                        }
+                        HttpResponse response = null;
+                        if (handler.HasValue)
+                        {
+                            object result;
+                            if(handler.Value.HasRouteSuffix && handler.Value.HasBody)
+                            {
+                                var controllerInfo = handler.Value.ControllerType.GetConstructor(Type.EmptyTypes);
+                                var controllerObject = controllerInfo.Invoke(new object[] { });
+                                result = handler.Value.Method.Invoke(controllerObject, new object[] { routeSuffix, _httpRequest.ContentString });
+                            }else if (handler.Value.HasRouteSuffix)
+                            {
+
+                            }else if (handler.Value.HasBody)
+                            {
+
+                            }
+                            else
+                            {
+
+                            }
+
+                        }
                         var answer = GetSampleAnswer();
                         Console.WriteLine(answer);
                         var a = Encoding.ASCII.GetBytes(answer);
@@ -33,6 +70,7 @@ namespace SocketTry.Handler
                             Console.WriteLine(e.ToString());
                             Dispose();
                         }
+                        ClearForNewRequest();
                     }
                 }
                 catch (Exception e)
@@ -41,6 +79,60 @@ namespace SocketTry.Handler
                     Dispose();
                 }
             }
+        }
+
+        private HttpVerbMethod? GetHttpMethodHandler(HttpMethod httpMethod, string path, out string routeSuffix)
+        {
+            routeSuffix = null;
+            if (_handlers.TryGetValue(httpMethod, out var routesHandler))
+            {
+                string route = null;
+                foreach (var routePath in routesHandler.Keys)
+                {
+                    if (routePath.Split("/").Length == path.Split("/").Length)
+                    {
+                        if(CheckPaths(routePath, path, out routeSuffix))
+                        {
+                            route = routePath;
+                            break;
+                        }
+                    }
+                }
+                if (route != null && routesHandler.TryGetValue(route, out var handler))
+                {
+                    return handler;
+                }
+            }
+
+            return null;
+        }
+
+        public bool CheckPaths(string route, string path, out string routeSuffix)
+        {
+            routeSuffix = null;
+            if (path == route) return true;
+            var pathParts = path.Split("/");
+            var routeParts = route.Split("/");
+
+            if (pathParts.Length != routeParts.Length) return false;
+
+            for (int i = 0; i < routeParts.Length; i++)
+            {
+                var match = Util.RouteSuffixRegex.Match(routeParts[i]);
+                if (match.Success)
+                {
+                    routeSuffix = pathParts[i];
+                }
+                else
+                {
+                    if (routeParts[i] != pathParts[i])
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
         }
 
         private bool TryGetLinesFromChunk(byte[] buffer, out string[] usableDataLines)
