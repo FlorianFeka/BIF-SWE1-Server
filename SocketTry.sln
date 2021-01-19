@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocketTry", "SocketTry\Sock
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocketTry.Sandbox", "SocketTry.Sandbox\SocketTry.Sandbox.csproj", "{AA18A92F-8C3F-44C3-AA5B-23DADB5200B2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocketTry.Test", "SocketTry.Test\SocketTry.Test.csproj", "{5EC432ED-6BBB-4312-98AE-2343497EBA1B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{AA18A92F-8C3F-44C3-AA5B-23DADB5200B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AA18A92F-8C3F-44C3-AA5B-23DADB5200B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AA18A92F-8C3F-44C3-AA5B-23DADB5200B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EC432ED-6BBB-4312-98AE-2343497EBA1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EC432ED-6BBB-4312-98AE-2343497EBA1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EC432ED-6BBB-4312-98AE-2343497EBA1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EC432ED-6BBB-4312-98AE-2343497EBA1B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
