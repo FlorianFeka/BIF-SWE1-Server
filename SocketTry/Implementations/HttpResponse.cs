@@ -4,10 +4,12 @@ using System.IO;
 using System.Net.Sockets;
 using System.Text;
 using SocketTry.Http;
+using System;
+using System.Globalization;
 
 namespace SocketTry.Implementations
 {
-    internal class HttpResponse : IResponse
+    public class HttpResponse : IResponse
     {
         public IDictionary<string, string> Headers { get; } = new Dictionary<string, string>()
         {

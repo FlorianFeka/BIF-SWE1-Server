@@ -4,7 +4,7 @@ namespace SocketTry
 {
     public abstract class BaseController
     {
-        internal HttpRequest HttpRequest { get; set; }
-        internal HttpResponse HttpResponse { get; set; }
+        public HttpRequest HttpRequest { get; set; }
+        public HttpResponse HttpResponse { get; set; }
     }
 }

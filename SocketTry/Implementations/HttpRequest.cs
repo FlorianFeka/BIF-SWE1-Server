@@ -5,12 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Sockets;
-using System.Text;
 
 namespace SocketTry.Implementations
 {
-    internal class HttpRequest : IRequest
+    public class HttpRequest : IRequest
     {
         public bool IsValid => !string.IsNullOrEmpty(Url.RawUrl) && Method != null;
 

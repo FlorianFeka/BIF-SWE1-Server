@@ -14,7 +14,7 @@ namespace SocketTry.Sandbox
         }
 
         [HttpGet("{id}")]
-        public string GetTest(int id, string body)
+        public string GetTestWith(string id, string body)
         {
             return body + " ID: " + id;
         }
