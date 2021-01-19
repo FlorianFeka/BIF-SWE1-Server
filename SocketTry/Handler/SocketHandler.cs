@@ -6,7 +6,7 @@ using System.Text;
 
 namespace SocketTry.Handler
 {
-    public abstract class SocketHandler : IDisposable
+    internal abstract class SocketHandler : IDisposable
     {
         private bool _listening = true;
 
@@ -21,7 +21,7 @@ namespace SocketTry.Handler
 
         private readonly byte _endOfString = (byte)'\0';
 
-        public SocketHandler(Socket socket, int receiveBufferSize, int sendBufferSize)
+        internal SocketHandler(Socket socket, int receiveBufferSize, int sendBufferSize)
         {
             _socket = socket;
             _socket.NoDelay = true;
@@ -54,13 +54,19 @@ namespace SocketTry.Handler
             }
         }
 
-        public void HandleReceive(IAsyncResult result)
+        internal void HandleReceive(IAsyncResult result)
         {
             if (!_listening) return;
             int bytesRead = 0;
             if (_socket != null)
             {
-                bytesRead = _socket.EndReceive(result);
+                try
+                {
+                    bytesRead = _socket.EndReceive(result);
+                } catch(Exception e)
+                {
+                    Console.WriteLine(e);
+                }
             }
 
             if (bytesRead < 1 || bytesRead > _receiveBuffer.Length)
@@ -77,7 +83,7 @@ namespace SocketTry.Handler
             BeginReceive();
         }
 
-        public void Send(byte[] data)
+        internal void Send(byte[] data)
         {
             _sendData = data;
             SendBuffer();
@@ -162,6 +168,6 @@ namespace SocketTry.Handler
             }
         }
 
-        public abstract void Receive(byte[] buffer);
+        internal abstract void Receive(byte[] buffer);
     }
 }

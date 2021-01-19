@@ -4,16 +4,16 @@ using System.Text.RegularExpressions;
 
 namespace SocketTry.Utils
 {
-    public static class Util
+    internal static class Util
     {
-        public static int? ToNullableInt(string s)
+        internal static int? ToNullableInt(string s)
         {
             int i;
             if (int.TryParse(s, out i)) return i;
             return null;
         }
         
-        public static HttpMethod ProcessMethod(string methodString)
+        internal static HttpMethod ProcessMethod(string methodString)
         {
             bool success = Enum.TryParse(methodString, out HttpMethod method);
             if (success)
@@ -23,7 +23,7 @@ namespace SocketTry.Utils
             throw new ArgumentException("Invalid or no HTTP method!");
         }
 
-        public static void FillEmptySpaceWith<T>(T[] arr, T fill, int from)
+        internal static void FillEmptySpaceWith<T>(T[] arr, T fill, int from)
         {
             if (from >= arr.Length) throw new Exception($"{nameof(from)} is greater then the length of {nameof(arr)}");
 
@@ -41,7 +41,7 @@ namespace SocketTry.Utils
         /// </example>
         /// <param name="path"></param>
         /// <returns>Pure path</returns>
-        public static string GetPurePath(string path)
+        internal static string GetPurePath(string path)
         {
             string pathWithoutQueryParameters = GetPathWithoutQueryParameters(path);
             var pathParts = pathWithoutQueryParameters.Split("/");
@@ -59,7 +59,7 @@ namespace SocketTry.Utils
             return string.Join('/', pathParts);
         }
 
-        public static string GetPathWithoutQueryParameters(string path)
+        internal static string GetPathWithoutQueryParameters(string path)
         {
             var startIndex = path.IndexOf("/");
             var parameterIndex = path.IndexOf("?");

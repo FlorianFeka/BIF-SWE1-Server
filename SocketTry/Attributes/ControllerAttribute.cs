@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SocketTry.Attributes
+﻿namespace SocketTry.Attributes
 {
     public class ControllerAttribute : ControllerDataAttribute
     {

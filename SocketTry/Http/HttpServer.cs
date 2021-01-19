@@ -18,15 +18,15 @@ namespace SocketTry.Http
 
         private struct ControllerAttributesDto
         {
-            public Type Type;
-            public object[] Attributes;
+            internal Type Type;
+            internal object[] Attributes;
         }
 
         private struct ControllerFunctionAttributeDto
         {
-            public ControllerAttributesDto Controller;
-            public MethodInfo MethodInfo;
-            public object[] Attributes;
+            internal ControllerAttributesDto Controller;
+            internal MethodInfo MethodInfo;
+            internal object[] Attributes;
         }
 
         public void Dispose()
@@ -56,12 +56,12 @@ namespace SocketTry.Http
             BeginAccept();
         }
 
-        public void BeginAccept()
+        internal void BeginAccept()
         {
             _listener.BeginAccept(HandleAccept, null);
         }
 
-        public void HandleAccept(IAsyncResult result)
+        internal void HandleAccept(IAsyncResult result)
         {
             if (!_listening) return;
             try

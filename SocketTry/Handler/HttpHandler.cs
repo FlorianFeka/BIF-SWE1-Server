@@ -5,14 +5,14 @@ using System.Text;
 
 namespace SocketTry.Handler
 {
-    public class HttpHandler : SocketHandler
+    internal class HttpHandler : SocketHandler
     {
         private string _leftOverContent;
         private HttpRequest _httpRequest = new HttpRequest();
 
-        public HttpHandler(Socket socket, int receiveBufferSize, int sendBufferSize) : base(socket, receiveBufferSize, sendBufferSize) { }
+        internal HttpHandler(Socket socket, int receiveBufferSize, int sendBufferSize) : base(socket, receiveBufferSize, sendBufferSize) { }
 
-        public override void Receive(byte[] buffer)
+        internal override void Receive(byte[] buffer)
         {
             if (TryGetLinesFromChunk(buffer, out var lines))
             {

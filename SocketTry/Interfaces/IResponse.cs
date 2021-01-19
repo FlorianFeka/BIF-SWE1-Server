@@ -4,7 +4,7 @@ using System.IO;
 
 namespace SocketTry.Interfaces
 {
-    public interface IResponse
+    internal interface IResponse
     {
         /// <summary>
         /// Returns a writable dictionary of the response headers. Never returns null.

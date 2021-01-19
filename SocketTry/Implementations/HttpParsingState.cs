@@ -1,6 +1,6 @@
 ﻿namespace SocketTry.Implementations
 {
-    public enum HttpParsingState
+    internal enum HttpParsingState
     {
         MetaData, Header, Data
     }

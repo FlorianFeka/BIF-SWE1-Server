@@ -10,7 +10,7 @@ using System.Text;
 
 namespace SocketTry.Implementations
 {
-    public class HttpRequest : IRequest
+    internal class HttpRequest : IRequest
     {
         public bool IsValid => !string.IsNullOrEmpty(Url.RawUrl) && Method != null;
 
@@ -22,7 +22,7 @@ namespace SocketTry.Implementations
 
         public string UserAgent => GetHeaderValue(HttpMeta.Headers.USER_AGENT);
 
-        public int HeaderCount => Headers.Count; 
+        public int HeaderCount => Headers.Count;
 
         public int? ContentLength => Util.ToNullableInt(GetHeaderValue(HttpMeta.Headers.CONTENT_LENGTH));
 
@@ -40,7 +40,7 @@ namespace SocketTry.Implementations
 
         /// <exception cref="Exception"></exception>
         /// <returns>returns <c>true</c> if it parsed the last chunk, otherwise returns <c>false</c></returns>
-        public bool ParseChunk(string[] chunk, string nextChunk)
+        internal bool ParseChunk(string[] chunk, string nextChunk)
         {
             if (chunk == null) return false;
 

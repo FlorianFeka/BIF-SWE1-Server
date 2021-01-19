@@ -7,7 +7,7 @@ using SocketTry.Http;
 
 namespace SocketTry.Implementations
 {
-    public class HttpResponse : IResponse
+    internal class HttpResponse : IResponse
     {
         public IDictionary<string, string> Headers { get; } = new Dictionary<string, string>();
 
