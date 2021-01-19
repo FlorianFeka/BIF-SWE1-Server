@@ -2,7 +2,8 @@
 
 namespace SocketTry.Attributes
 {
-    public class HttpVerbAttribute : Attribute
+    public abstract class HttpVerbAttribute : Attribute
     {
+        public string SufixRoute { get; set; }
     }
 }

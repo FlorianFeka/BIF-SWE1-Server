@@ -122,7 +122,6 @@ namespace SocketTry.Handler
         private void ClearForNewSend()
         {
             _sendData = null;
-            _sendRound = 0;
             _sendDataSizeLeft = 0;
             _sentDataSize = 0;
         }

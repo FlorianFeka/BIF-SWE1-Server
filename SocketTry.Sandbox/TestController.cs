@@ -6,10 +6,10 @@ namespace SocketTry.Sandbox
     [Controller]
     public class TestController : BaseController
     {
-        [HttpGet]
-        public string GetTest()
+        [HttpGet("{id}")]
+        public string GetTest(int id, string body)
         {
-            return "test";
+            return body + " ID: " + id;
         }
     }
 }
