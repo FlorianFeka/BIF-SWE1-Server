@@ -130,29 +130,6 @@ namespace SocketTry.Http
             });
         }
 
-        private HttpVerbMethod? GetHttpMethodHandler(HttpMethod httpMethod, string path)
-        {
-            if (_handlers.TryGetValue(httpMethod, out var routesHandler))
-            {
-                var route = routesHandler.Keys
-                    .Where(x =>
-                    {
-                        if (x.Split("/").Length == path.Split("/").Length)
-                        {
-                            return Util.GetPurePath(x) == Util.GetPurePath(path);
-                        }
-                        return false;
-                    })
-                    .FirstOrDefault();
-                if (route != null && routesHandler.TryGetValue(route, out var handler))
-                {
-                    return handler;
-                }
-            }
-
-            return null;
-        }
-
         private bool HasBody(MethodInfo methodInfo, bool hasRouteSuffix)
         {
             var parameters = methodInfo.GetParameters();
@@ -228,7 +205,7 @@ namespace SocketTry.Http
                 Socket socket = _listener.EndAccept(result);
                 Console.WriteLine($"Accepted Connection from {socket.RemoteEndPoint}");
 
-                new HttpHandler(socket, 4096, 4096);
+                new HttpHandler(socket, 4096, 4096, _handlers);
 
                 BeginAccept();
             }

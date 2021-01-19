@@ -6,6 +6,7 @@ namespace SocketTry.Utils
 {
     internal static class Util
     {
+        public static Regex RouteSuffixRegex = new Regex(@"({[_\w]+})");
         internal static int? ToNullableInt(string s)
         {
             int i;
@@ -46,11 +47,9 @@ namespace SocketTry.Utils
             string pathWithoutQueryParameters = GetPathWithoutQueryParameters(path);
             var pathParts = pathWithoutQueryParameters.Split("/");
 
-            var pathParameterRegex = new Regex(@"({[_\w]+})");
-
             for (int i = 0; i < pathParts.Length; i++)
             {
-                if (pathParameterRegex.IsMatch(pathParts[i]))
+                if (RouteSuffixRegex.IsMatch(pathParts[i]))
                 {
                     pathParts[i] = "*";
                 }

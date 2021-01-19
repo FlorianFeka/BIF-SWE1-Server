@@ -6,6 +6,13 @@ namespace SocketTry.Sandbox
     [Controller]
     public class TestController : BaseController
     {
+
+        [HttpGet]
+        public string GetTest()
+        {
+            return "Empty Test Route";
+        }
+
         [HttpGet("{id}")]
         public string GetTest(int id, string body)
         {
