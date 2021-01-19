@@ -12,6 +12,7 @@ namespace SocketTry.Http
     public class HttpServer : IDisposable
     {
         private Socket _listener;
+        private IPEndPoint _endPoint;
         private bool _listening = true;
         private Assembly _entryAssembly;
 
@@ -36,6 +37,8 @@ namespace SocketTry.Http
 
         public void Start(IPEndPoint endPoint)
         {
+            _endPoint = endPoint;
+
             _listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             _listener.NoDelay = true;
             _listener.Blocking = false;
@@ -45,8 +48,11 @@ namespace SocketTry.Http
 
             _entryAssembly = Assembly.GetEntryAssembly();
             LoadControllers();
+        }
 
-            Console.WriteLine($"Server listening on {endPoint}");
+        internal void StartFirstAccept()
+        {
+            Console.WriteLine($"Server listening on {_endPoint}");
             BeginAccept();
         }
 
@@ -78,6 +84,7 @@ namespace SocketTry.Http
         {
             var controllers = FindControllers();
             var handlers = FindHttpHandlers(controllers);
+            StartFirstAccept();
         }
 
         private IEnumerable<ControllerFunctionAttributeDto> FindHttpHandlers(IEnumerable<ControllerAttributesDto> controllers)
