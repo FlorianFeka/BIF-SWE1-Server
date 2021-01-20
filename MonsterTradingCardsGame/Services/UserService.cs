@@ -20,8 +20,7 @@ namespace MonsterTradingCardsGame.Services
 
         public bool CreateUser(User user)
         {
-
-            return true;
+            return _userRepository.CreateUser(user);
         }
     }
 }
