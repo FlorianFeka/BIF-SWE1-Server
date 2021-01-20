@@ -109,7 +109,7 @@ namespace SocketTry.Implementations
 
             if (ContentBytes?.Length > 0)
             {
-                Headers.Add(HttpMeta.Headers.CONTENT_LENGTH, ContentBytes.Length.ToString());
+                Headers[HttpMeta.Headers.CONTENT_LENGTH] = ContentBytes.Length.ToString();
             }
             foreach (var header in Headers)
             {

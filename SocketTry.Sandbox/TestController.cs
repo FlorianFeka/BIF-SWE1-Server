@@ -19,5 +19,11 @@ namespace SocketTry.Sandbox
         {
             return body + " ID: " + id;
         }
+
+        [HttpPost]
+        public string PostSomething()
+        {
+            return "Just a test post";
+        }
     }
 }

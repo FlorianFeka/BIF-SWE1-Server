@@ -122,6 +122,7 @@ namespace SocketTry.Handler
             _sendData = null;
             _sendDataSizeLeft = 0;
             _sentDataSize = 0;
+            _receiveBuffer = new byte[_receiveBufferSize];
         }
 
         public void Dispose()
