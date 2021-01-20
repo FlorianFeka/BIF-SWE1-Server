@@ -13,7 +13,7 @@ namespace SocketTry.Implementations
     {
         public IDictionary<string, string> Headers { get; } = new Dictionary<string, string>()
         {
-            { HttpMeta.Headers.DATE, DateTime.UtcNow.ToString("ddd, dd MMM yyyy HH:mm:ss", CultureInfo.CreateSpecificCulture("en-US")) + " GMT" },
+            { HttpMeta.Headers.DATE, DateTime.Now.ToString("ddd, dd MMM yyyy HH:mm:ss", CultureInfo.CreateSpecificCulture("en-US")) + " GMT + 1" },
             { HttpMeta.Headers.SERVER, "Some_random_server/0.1" },
             { HttpMeta.Headers.CONNECTION, "keep-alive" }
         }; // defaults

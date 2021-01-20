@@ -28,10 +28,11 @@ namespace SocketTry.Sandbox
         }
 
         [HttpPost]
-        public string PostSomething()
+        public void PostSomething()
         {
             HttpResponse.AddHeader("SomeRandomTestHeader", "someRandomValue");
-            return $"Just a test post\nRequest Method: {HttpRequest.Method.Value}\n";
+            HttpResponse.StatusCode = 204;
+            HttpResponse.Status = "No Content";
         }
     }
 }

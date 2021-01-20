@@ -103,9 +103,16 @@ namespace SocketTry.Handler
                     parameters = new object[] { };
                 }
                 result = handler.Value.Method.Invoke(controllerObject, parameters);
-                if(!(result is string))
+                if(result != null)
                 {
-                    result = JsonSerializer.Serialize(result);
+                    if (!(result is string))
+                    {
+                        result = JsonSerializer.Serialize(result);
+                    }
+                }
+                else
+                {
+                    result = "";
                 }
                 response.SetContent((result as string));
             }
