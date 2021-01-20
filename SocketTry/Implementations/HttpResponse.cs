@@ -32,12 +32,21 @@ namespace SocketTry.Implementations
 
         public void SetStatus(int code)
         {
-            if(HttpMeta.StatusCodes.TryGetValue(code, out var status))
+            if(HttpMeta.CodeToStatus.TryGetValue(code, out var status))
             {
                 StatusCode = code;
                 Status = status;
             }
             throw new Exception("Invalid status code");
+        }
+        public void SetStatus(string status)
+        {
+            if (HttpMeta.StatusToCode.TryGetValue(status, out var code))
+            {
+                StatusCode = code;
+                Status = status;
+            }
+            throw new Exception("Invalid status");
         }
 
         public void AddHeader(string header, string value)
