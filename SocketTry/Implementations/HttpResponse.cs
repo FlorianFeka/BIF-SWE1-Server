@@ -36,15 +36,21 @@ namespace SocketTry.Implementations
             {
                 StatusCode = code;
                 Status = status;
+                return;
             }
             throw new Exception("Invalid status code");
         }
-        public void SetStatus(string status)
+        public void SetStatus(HttpStatus status)
         {
             if (HttpMeta.StatusToCode.TryGetValue(status, out var code))
             {
                 StatusCode = code;
-                Status = status;
+                var statusString = status.ToString()
+                    .Replace("___", "'")
+                    .Replace("__", "-")
+                    .Replace("_", " ");
+                Status = statusString;
+                return;
             }
             throw new Exception("Invalid status");
         }

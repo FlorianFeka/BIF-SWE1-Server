@@ -118,8 +118,7 @@ namespace SocketTry.Handler
             }
             else
             {
-                response.StatusCode = 404;
-                response.Status = "Not Found";
+                response.SetStatus(HttpStatus.Not_Found);
                 response.Headers[HttpMeta.Headers.CONNECTION] = "Closed";
 
                 response.SetContent($"Couldn't find route: {_httpRequest.Url.Path}");
