@@ -36,10 +36,10 @@ namespace SocketTry.Handler
                         {
                             handler = GetHttpMethodHandler(_httpRequest.Method.Value, _httpRequest.Url.Path, out routeSuffix);
                         }
-                        HttpResponse response = null;
+                        HttpResponse response = new HttpResponse();
                         if (handler.HasValue)
                         {
-                            object result;
+                            object result = null;
                             var controllerInfo = handler.Value.ControllerType.GetConstructor(Type.EmptyTypes);
                             var controllerObject = controllerInfo.Invoke(new object[] { });
                             object[] parameters = null;
@@ -60,9 +60,15 @@ namespace SocketTry.Handler
                                 parameters = new object[] { };
                             }
                             result = handler.Value.Method.Invoke(controllerObject, parameters);
+                            response.SetContent((result as string));
+                        }
+                        else
+                        {
+
                         }
 
-                        var answer = GetSampleAnswer();
+
+                        var answer = response.ToString();
                         Console.WriteLine(answer);
                         var a = Encoding.ASCII.GetBytes(answer);
                         try
