@@ -118,7 +118,10 @@ namespace SocketTry.Implementations
 
             stringBuilder.AppendLine();
 
-            stringBuilder.AppendLine(Encoding.ASCII.GetString(ContentBytes));
+            if (ContentBytes?.Length > 0)
+            {
+                stringBuilder.AppendLine(Encoding.ASCII.GetString(ContentBytes));
+            }
 
             return stringBuilder.ToString();
         }
