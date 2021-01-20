@@ -16,7 +16,7 @@ namespace SocketTry.Implementations
             { HttpMeta.Headers.DATE, DateTime.UtcNow.ToString("ddd, dd MMM yyyy HH:mm:ss", CultureInfo.CreateSpecificCulture("en-US")) + " GMT" },
             { HttpMeta.Headers.SERVER, "Some_random_server/0.1" },
             { HttpMeta.Headers.CONNECTION, "keep-alive" }
-        };
+        }; // defaults
 
         public int ContentLength { get => ContentBytes.Length; }
 
@@ -24,9 +24,9 @@ namespace SocketTry.Implementations
 
         public byte[] ContentBytes { get; set; }
 
-        public int StatusCode { get; set; }
+        public int StatusCode { get; set; } = 200; //default
 
-        public string Status { get; set; }
+        public string Status { get; set; } = "OK"; //default
 
         public string ServerHeader { get; set; }
 
@@ -102,7 +102,7 @@ namespace SocketTry.Implementations
             var stringBuilder = new StringBuilder();
 
             stringBuilder.AppendLine(
-                string.Join(": ",
+                string.Join(" ",
                     HttpMeta.VERSION, 
                     StatusCode.ToString(), 
                     Status.ToUpper()));
@@ -117,6 +117,8 @@ namespace SocketTry.Implementations
             }
 
             stringBuilder.AppendLine();
+
+            stringBuilder.AppendLine(Encoding.ASCII.GetString(ContentBytes));
 
             return stringBuilder.ToString();
         }
