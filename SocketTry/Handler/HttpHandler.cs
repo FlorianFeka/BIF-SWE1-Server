@@ -92,7 +92,7 @@ namespace SocketTry.Handler
                 else if (handler.Value.HasBody)
                 {
                     object castedBody = _httpRequest.ContentString;
-                    if (parameterInfos[1].ParameterType != typeof(string))
+                    if (parameterInfos[0].ParameterType != typeof(string))
                     {
                         castedBody = JsonSerializer.Deserialize(_httpRequest.ContentString, parameterInfos[0].ParameterType);
                     }
