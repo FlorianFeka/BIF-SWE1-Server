@@ -1,4 +1,4 @@
-﻿namespace SocketTry.Attributes
+﻿namespace SocketTry.Attributes.Verbs
 {
     public class HttpGetAttribute : HttpVerbAttribute
     {

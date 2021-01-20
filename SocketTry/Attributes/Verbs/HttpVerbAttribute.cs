@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SocketTry.Attributes
+namespace SocketTry.Attributes.Verbs
 {
     public abstract class HttpVerbAttribute : Attribute
     {

@@ -1,4 +1,5 @@
 ﻿using SocketTry.Attributes;
+using SocketTry.Attributes.Verbs;
 using SocketTry.Handler;
 using SocketTry.Utils;
 using System;
@@ -153,6 +154,18 @@ namespace SocketTry.Http
             if(httpVerbAttribute is HttpGetAttribute)
             {
                 return HttpMethod.GET;
+            }
+            if (httpVerbAttribute is HttpPostAttribute)
+            {
+                return HttpMethod.POST;
+            }
+            if (httpVerbAttribute is HttpPutAttribute)
+            {
+                return HttpMethod.PUT;
+            }
+            if (httpVerbAttribute is HttpDeleteAttribute)
+            {
+                return HttpMethod.DELETE;
             }
 
             throw new Exception("Unknown HttpVerbAttribute!");
