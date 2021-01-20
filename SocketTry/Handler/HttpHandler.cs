@@ -7,6 +7,7 @@ using System.Text;
 using System.Linq;
 using static SocketTry.Http.HttpServer;
 using SocketTry.Utils;
+using System.Text.Json;
 
 namespace SocketTry.Handler
 {
@@ -86,6 +87,10 @@ namespace SocketTry.Handler
                     parameters = new object[] { };
                 }
                 result = handler.Value.Method.Invoke(controllerObject, parameters);
+                if(!(result is string))
+                {
+                    result = JsonSerializer.Serialize(result);
+                }
                 response.SetContent((result as string));
             }
             else

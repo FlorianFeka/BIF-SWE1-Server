@@ -9,9 +9,14 @@ namespace SocketTry.Sandbox
     {
 
         [HttpGet]
-        public string GetTest()
+        public Card GetTest()
         {
-            return "Empty Test Route";
+            var a = new Card
+            {
+                Name = "Fire Goblin",
+                Damage = 34
+            };
+            return a;
         }
 
         [HttpGet("{id}")]
