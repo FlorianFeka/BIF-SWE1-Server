@@ -12,8 +12,6 @@ namespace SocketTry.Sandbox
             using (var server = new HttpServer())
             {
                 server.Start(localEndPoint);
-                Console.WriteLine("\nPress [Enter] to Stop the Server!\n");
-                Console.ReadLine();
             }
         }
     }

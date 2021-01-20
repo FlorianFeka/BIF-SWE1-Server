@@ -59,6 +59,8 @@ namespace SocketTry.Http
 
             _entryAssembly = Assembly.GetEntryAssembly();
             LoadControllers();
+            Console.WriteLine("\nPress [Enter] to Stop the Server!\n");
+            Console.ReadLine();
         }
 
         private void LoadControllers()
