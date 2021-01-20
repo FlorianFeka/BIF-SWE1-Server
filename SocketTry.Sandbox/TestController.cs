@@ -30,7 +30,8 @@ namespace SocketTry.Sandbox
         [HttpPost]
         public string PostSomething()
         {
-            return "Just a test post";
+            HttpResponse.AddHeader("SomeRandomTestHeader", "someRandomValue");
+            return $"Just a test post\nRequest Method: {HttpRequest.Method.Value}\n";
         }
     }
 }

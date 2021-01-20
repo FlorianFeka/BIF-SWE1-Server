@@ -68,7 +68,9 @@ namespace SocketTry.Handler
             {
                 object result;
                 var controllerInfo = handler.Value.ControllerType.GetConstructor(Type.EmptyTypes);
-                var controllerObject = controllerInfo.Invoke(new object[] { });
+                var controllerObject = (controllerInfo.Invoke(new object[] { }) as BaseController);
+                controllerObject.HttpRequest = _httpRequest;
+                controllerObject.HttpResponse = response;
                 object[] parameters;
                 var parameterInfos = handler.Value.Method.GetParameters();
                 if (handler.Value.HasRouteSuffix && handler.Value.HasBody)
