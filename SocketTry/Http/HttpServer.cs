@@ -132,16 +132,15 @@ namespace SocketTry.Http
         private bool HasBody(MethodInfo methodInfo, bool hasRouteSuffix)
         {
             var parameters = methodInfo.GetParameters();
-            if (parameters.Length > 2 || (!hasRouteSuffix && parameters.Length > 1)) throw new Exception($"Method [{methodInfo.Name}] has too many functions!");
+            if (parameters.Length == 0) return false;
             if (hasRouteSuffix && parameters.Length == 1) return false;
+            if (parameters.Length > 2 || (!hasRouteSuffix && parameters.Length > 1)) throw new Exception($"Method [{methodInfo.Name}] has too many parameters!");
 
             return true;
         }
 
         private void ValidateSuffixRoute(MethodInfo methodInfo, string suffixRoute)
         {
-            var test = "{whatATest}";
-            Console.WriteLine(test.Substring(1, test.Length - 2));
             var firstParameter = methodInfo.GetParameters().FirstOrDefault();
             if (firstParameter == null || firstParameter.Name != suffixRoute.Substring(1, suffixRoute.Length - 2))
             {

@@ -40,24 +40,28 @@ namespace SocketTry.Handler
                         if (handler.HasValue)
                         {
                             object result;
-                            if(handler.Value.HasRouteSuffix && handler.Value.HasBody)
+                            var controllerInfo = handler.Value.ControllerType.GetConstructor(Type.EmptyTypes);
+                            var controllerObject = controllerInfo.Invoke(new object[] { });
+                            object[] parameters = null;
+                            var methodParameterCount = handler.Value.Method.GetParameters().Length;
+                            if (handler.Value.HasRouteSuffix && handler.Value.HasBody)
                             {
-                                var controllerInfo = handler.Value.ControllerType.GetConstructor(Type.EmptyTypes);
-                                var controllerObject = controllerInfo.Invoke(new object[] { });
-                                result = handler.Value.Method.Invoke(controllerObject, new object[] { routeSuffix, _httpRequest.ContentString });
+                                parameters = new object[] { routeSuffix, _httpRequest.ContentString };
                             }else if (handler.Value.HasRouteSuffix)
                             {
-
-                            }else if (handler.Value.HasBody)
+                                parameters = new object[] { routeSuffix };
+                            }
+                            else if (handler.Value.HasBody)
                             {
-
+                                parameters = new object[] { _httpRequest.ContentString };
                             }
                             else
                             {
-
+                                parameters = new object[] { };
                             }
-
+                            result = handler.Value.Method.Invoke(controllerObject, parameters);
                         }
+
                         var answer = GetSampleAnswer();
                         Console.WriteLine(answer);
                         var a = Encoding.ASCII.GetBytes(answer);
