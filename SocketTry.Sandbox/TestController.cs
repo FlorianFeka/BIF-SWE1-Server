@@ -20,9 +20,11 @@ namespace SocketTry.Sandbox
         }
 
         [HttpGet("{id}")]
-        public string GetTestWith(string id, string body)
+        public Card GetTestWith(int id, Card body)
         {
-            return body + " ID: " + id;
+            id += 2000;
+            body.Damage = id;
+            return body;
         }
 
         [HttpPost]

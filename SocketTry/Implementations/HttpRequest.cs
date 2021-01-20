@@ -58,7 +58,10 @@ namespace SocketTry.Implementations
                 {
                     return true;
                 }
-                ContentString += string.Join("\n", chunk);
+                if(chunk.Length != 0)
+                {
+                    ContentString += string.Join("\n", chunk)+"\n";
+                }
                 ContentString += nextChunk;
                 if (ContentString.Length == ContentLength)
                 {

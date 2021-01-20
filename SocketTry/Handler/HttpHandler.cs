@@ -70,17 +70,31 @@ namespace SocketTry.Handler
                 var controllerInfo = handler.Value.ControllerType.GetConstructor(Type.EmptyTypes);
                 var controllerObject = controllerInfo.Invoke(new object[] { });
                 object[] parameters;
+                var parameterInfos = handler.Value.Method.GetParameters();
                 if (handler.Value.HasRouteSuffix && handler.Value.HasBody)
                 {
-                    parameters = new object[] { routeSuffix, _httpRequest.ContentString };
+                    var castedRouteSuffix = Convert.ChangeType(routeSuffix, parameterInfos[0].ParameterType);
+                    object castedBody = _httpRequest.ContentString;
+                    if (parameterInfos[1].ParameterType != typeof(string))
+                    {
+                        castedBody = JsonSerializer.Deserialize(_httpRequest.ContentString, parameterInfos[1].ParameterType);
+                    }
+
+                    parameters = new object[] { castedRouteSuffix, castedBody };
                 }
                 else if (handler.Value.HasRouteSuffix)
                 {
-                    parameters = new object[] { routeSuffix };
+                    var castedRouteSuffix = Convert.ChangeType(routeSuffix, parameterInfos[0].ParameterType);
+                    parameters = new object[] { castedRouteSuffix };
                 }
                 else if (handler.Value.HasBody)
                 {
-                    parameters = new object[] { _httpRequest.ContentString };
+                    object castedBody = _httpRequest.ContentString;
+                    if (parameterInfos[1].ParameterType != typeof(string))
+                    {
+                        castedBody = JsonSerializer.Deserialize(_httpRequest.ContentString, parameterInfos[0].ParameterType);
+                    }
+                    parameters = new object[] { castedBody };
                 }
                 else
                 {
