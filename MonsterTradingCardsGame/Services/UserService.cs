@@ -22,5 +22,10 @@ namespace MonsterTradingCardsGame.Services
         {
             return _userRepository.CreateUser(user);
         }
+
+        public bool UserExists(string username)
+        {
+            return _userRepository.UserExists(username);
+        }
     }
 }

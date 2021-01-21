@@ -114,7 +114,10 @@ namespace SocketTry.Handler
                 {
                     result = "";
                 }
-                response.SetContent((result as string));
+                if(response.ContentBytes == null)
+                {
+                    response.SetContent((result as string));
+                }
             }
             else
             {
