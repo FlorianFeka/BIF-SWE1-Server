@@ -23,6 +23,12 @@ namespace MonsterTradingCardsGame.Controllers
         [HttpPost]
         public User CreateUser(User user)
         {
+            if(user == null || user.Username == null)
+            {
+                HttpResponse.SetContent("Invalid User!");
+                HttpResponse.SetStatus(HttpStatus.Bad_Request);
+                return null;
+            }
             if (_userService.UserExists(user.Username))
             {
                 HttpResponse.SetContent("User already exists!");

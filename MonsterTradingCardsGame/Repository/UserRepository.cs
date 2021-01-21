@@ -15,11 +15,9 @@ namespace MonsterTradingCardsGame.Repository
             _connection = SingletonFactory.GetObject<DatabaseConnection>();
         }
 
-
         public bool CreateUser(User user)
         {
             SqlCommand command = new SqlCommand(_insertCommandString, _connection.GetConnection());
-            //("@Id", SqlDbType.UniqueIdentifier, 16).Value = user.Id
             command.Parameters.Add(CreateSqlParameter("@Id", SqlDbType.UniqueIdentifier, 16, user.Id));
             command.Parameters.Add(CreateSqlParameter("@Username", SqlDbType.VarChar, 255, user.Username));
             command.Parameters.Add(CreateSqlParameter("@Password", SqlDbType.VarChar, 255, user.Password));

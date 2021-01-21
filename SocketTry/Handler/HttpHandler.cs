@@ -1,13 +1,12 @@
 ﻿using SocketTry.Http;
 using SocketTry.Implementations;
+using SocketTry.Utils;
 using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Text;
-using System.Linq;
-using static SocketTry.Http.HttpServer;
-using SocketTry.Utils;
 using System.Text.Json;
+using static SocketTry.Http.HttpServer;
 
 namespace SocketTry.Handler
 {
