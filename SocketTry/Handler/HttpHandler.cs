@@ -122,10 +122,11 @@ namespace SocketTry.Handler
                 }
                 catch (Exception e)
                 {
+                    var baseException = e.GetBaseException();
                     response.SetStatus(HttpStatus.Internal_Server_Error);
                     response.Headers[HttpMeta.Headers.CONNECTION] = "Closed";
 
-                    response.SetContent($"{e.Message}\n{e.StackTrace}");
+                    response.SetContent($"{baseException.Message}\n{baseException.StackTrace}");
                 }
             }
             else
