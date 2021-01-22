@@ -17,12 +17,13 @@ namespace MonsterTradingCardsGame.Repository
 
         public bool CreateUser(User user)
         {
-            SqlCommand command = new SqlCommand(_insertCommandString, _connection.GetConnection());
-            command.Parameters.Add(CreateSqlParameter("@Id", SqlDbType.UniqueIdentifier, 16, user.Id));
-            command.Parameters.Add(CreateSqlParameter("@Username", SqlDbType.VarChar, 255, user.Username));
-            command.Parameters.Add(CreateSqlParameter("@Password", SqlDbType.VarChar, 255, user.Password));
-            command.Parameters.Add(CreateSqlParameter("@Bio", SqlDbType.VarChar, 255, user.Bio != null ? user.Bio : ""));
-            command.Parameters.Add(CreateSqlParameter("@Image", SqlDbType.VarChar, 255, user.Image != null ? user.Image : ""));
+            SqlCommand command = new SqlCommand(_createUserCommandString, _connection.GetConnection());
+            command.Parameters.Add(Utils.CreateSqlParameter("@Id", SqlDbType.UniqueIdentifier, 16, user.Id));
+            command.Parameters.Add(Utils.CreateSqlParameter("@Username", SqlDbType.VarChar, 255, user.Username));
+            command.Parameters.Add(Utils.CreateSqlParameter("@Password", SqlDbType.VarChar, 255, user.Password));
+            command.Parameters.Add(Utils.CreateSqlParameter("@Bio", SqlDbType.VarChar, 255, user.Bio != null ? user.Bio : ""));
+            command.Parameters.Add(Utils.CreateSqlParameter("@Image", SqlDbType.VarChar, 255, user.Image != null ? user.Image : ""));
+            command.Parameters.Add(Utils.CreateSqlParameter("@Money", SqlDbType.Int, 4, user.Money));
             command.Prepare();
             var rowsAdded = command.ExecuteNonQuery();
             return rowsAdded == 1;
@@ -31,9 +32,9 @@ namespace MonsterTradingCardsGame.Repository
         public bool UserExists(string username)
         {
             SqlCommand command = new SqlCommand(_userExistsCommandString, _connection.GetConnection());
-            command.Parameters.Add(CreateSqlParameter("@Username", SqlDbType.VarChar, 255, username));
+            command.Parameters.Add(Utils.CreateSqlParameter("@Username", SqlDbType.VarChar, 255, username));
             command.Prepare();
-            var reader = command.ExecuteReader();
+            using var reader = command.ExecuteReader();
             if (reader.Read())
             {
                 var count = reader[0] as int?;
@@ -44,30 +45,39 @@ namespace MonsterTradingCardsGame.Repository
             }
             else
             {
-                throw new Exception("Read for existing didn't have any rows (should have one)!");
+                throw new Exception("Read for existing didn't have any rows (always should have one row and column)!");
             }
-            reader.Close();
             return false;
         }
 
-        private SqlParameter CreateSqlParameter(string parameterName, SqlDbType sqlDbType, int size, object value)
+        public User GetUserWithUsername(string usernameParam)
         {
-            return new SqlParameter
+            User user = null;
+            SqlCommand command = new SqlCommand(_selectUserWithUsernameCommandString, _connection.GetConnection());
+            command.Parameters.Add(Utils.CreateSqlParameter("@Username", SqlDbType.VarChar, 255, usernameParam));
+            command.Prepare();
+            using var reader = command.ExecuteReader();
+            if (reader.Read())
             {
-                ParameterName = parameterName,
-                SqlDbType = sqlDbType,
-                Size = size,
-                Value = value
-            };
+                user = new User
+                {
+                    Id = reader.GetGuid(0),
+                    Username = reader.GetString(1),
+                    Password = reader.GetString(2),
+                    Bio = reader.GetString(3),
+                    Image = reader.GetString(4),
+                    Money = reader.GetInt32(5),
+                };
+            }
+            return user;
         }
 
-        public bool TestThis()
-        {
-            return true;
-        }
+        private readonly string _createUserCommandString = "INSERT INTO [dbo].[Users] ([Id],[Username],[Password],[Bio],[Image],[Money])" +
+            "VALUES(@Id,@Username,@Password,@Bio,@Image,@Money);";
 
-        private string _insertCommandString = "INSERT INTO [dbo].[Users] ([Id],[Username],[Password],[Bio],[Image])" +
-            "VALUES(@Id,@Username,@Password,@Bio,@Image);";
-        private string _userExistsCommandString = "Select COUNT(*) FROM [dbo].[Users] WHERE [Username] = @Username";
+        private readonly string _userExistsCommandString = "Select COUNT(*) FROM [dbo].[Users] WHERE [Username] = @Username";
+
+        private readonly string _selectUserWithUsernameCommandString = "Select [Id], [Username], [Password], [Bio], [Image], [Money]" +
+            "FROM[dbo].[Users] WHERE[Username] = @Username";
     }
 }

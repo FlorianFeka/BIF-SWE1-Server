@@ -17,7 +17,7 @@ namespace MonsterTradingCardsGame.Util
 
         public SqlConnection GetConnection()
         {
-            if (_connection != null && _connection.State != ConnectionState.Closed)
+            if (_connection != null && _connection.State != ConnectionState.Open)
             {
                 _connection.Close();
                 _connection.Open();

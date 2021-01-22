@@ -1,6 +1,7 @@
 ﻿using MonsterTradingCardsGame.Models;
 using MonsterTradingCardsGame.Repository;
 using MonsterTradingCardsGame.Util;
+using System;
 
 namespace MonsterTradingCardsGame.Services
 {
@@ -13,9 +14,18 @@ namespace MonsterTradingCardsGame.Services
             _userRepository = SingletonFactory.GetObject<UserRepository>();
         }
 
-        public bool Test()
+        public User CheckPassword(string username, string password)
         {
-            return _userRepository.TestThis();
+            User user = _userRepository.GetUserWithUsername(username);
+            if(user == null)
+            {
+                throw new Exception("User not found");
+            }
+            if(user.Password != password)
+            {
+                return null;
+            }
+            return user;
         }
 
         public bool CreateUser(User user)

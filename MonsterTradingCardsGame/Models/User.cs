@@ -9,5 +9,6 @@ namespace MonsterTradingCardsGame.Models
         public string Password { get; set; }
         public string Bio { get; set; }
         public string Image { get; set; }
+        public int Money { get; set; } = 20;
     }
 }
