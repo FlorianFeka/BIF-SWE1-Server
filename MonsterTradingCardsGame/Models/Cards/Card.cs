@@ -12,6 +12,7 @@ namespace MonsterTradingCardsGame.Models.Cards
         public MonsterType? Monster { get; set; }
         public ElementType Element { get; set; } = ElementType.Normal;
         public bool IsSpell { get; set; }
+        public Guid UserId { get; set; }
 
         public void SetTypes()
         {

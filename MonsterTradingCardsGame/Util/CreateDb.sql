@@ -1,11 +1,11 @@
 ﻿USE [master]
 GO
 
-/****** Object:  Database [MonsterTradingCardGame]    Script Date: 22/01/2021 18:48:22 ******/
+/****** Object:  Database [MonsterTradingCardGame]    Script Date: 22/01/2021 23:18:50 ******/
 DROP DATABASE [MonsterTradingCardGame]
 GO
 
-/****** Object:  Database [MonsterTradingCardGame]    Script Date: 22/01/2021 18:48:22 ******/
+/****** Object:  Database [MonsterTradingCardGame]    Script Date: 22/01/2021 23:18:50 ******/
 CREATE DATABASE [MonsterTradingCardGame]
  CONTAINMENT = NONE
  ON  PRIMARY 
@@ -113,80 +113,16 @@ GO
 ALTER DATABASE [MonsterTradingCardGame] SET  READ_WRITE 
 GO
 
-USE [MonsterTradingCardGame]
-GO
-
-/****** Object:  Table [dbo].[Cards]    Script Date: 22/01/2021 18:48:31 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Cards]') AND type in (N'U'))
-DROP TABLE [dbo].[Cards]
-GO
-
-/****** Object:  Table [dbo].[Cards]    Script Date: 22/01/2021 18:48:31 ******/
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
-CREATE TABLE [dbo].[Cards](
-	[Id] [uniqueidentifier] NOT NULL,
-	[Name] [varchar](255) NOT NULL,
-	[Damage] [float] NOT NULL,
-	[Monster] [varchar](255) NULL,
-	[Element] [varchar](255) NOT NULL,
-	[IsSpell] [bit] NOT NULL,
- CONSTRAINT [PK_Cards] PRIMARY KEY CLUSTERED 
-(
-	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
-GO
 
 USE [MonsterTradingCardGame]
 GO
 
-ALTER TABLE [dbo].[Packages] DROP CONSTRAINT [FK_Packages_Packages_Cards]
-GO
-
-/****** Object:  Table [dbo].[Packages]    Script Date: 22/01/2021 18:48:39 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Packages]') AND type in (N'U'))
-DROP TABLE [dbo].[Packages]
-GO
-
-/****** Object:  Table [dbo].[Packages]    Script Date: 22/01/2021 18:48:39 ******/
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
-CREATE TABLE [dbo].[Packages](
-	[Id] [uniqueidentifier] NOT NULL,
-	[CardId] [uniqueidentifier] NOT NULL,
- CONSTRAINT [PK_Packages] PRIMARY KEY CLUSTERED 
-(
-	[Id] ASC,
-	[CardId] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-
-ALTER TABLE [dbo].[Packages]  WITH CHECK ADD  CONSTRAINT [FK_Packages_Packages_Cards] FOREIGN KEY([CardId])
-REFERENCES [dbo].[Cards] ([Id])
-GO
-
-ALTER TABLE [dbo].[Packages] CHECK CONSTRAINT [FK_Packages_Packages_Cards]
-GO
-
-USE [MonsterTradingCardGame]
-GO
-
-/****** Object:  Table [dbo].[Users]    Script Date: 22/01/2021 18:48:48 ******/
+/****** Object:  Table [dbo].[Users]    Script Date: 22/01/2021 23:19:43 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Users]') AND type in (N'U'))
 DROP TABLE [dbo].[Users]
 GO
 
-/****** Object:  Table [dbo].[Users]    Script Date: 22/01/2021 18:48:48 ******/
+/****** Object:  Table [dbo].[Users]    Script Date: 22/01/2021 23:19:43 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -217,12 +153,12 @@ GO
 ALTER TABLE [dbo].[Sessions] DROP CONSTRAINT [FK_Sessions_Sessions_Users]
 GO
 
-/****** Object:  Table [dbo].[Sessions]    Script Date: 22/01/2021 18:48:55 ******/
+/****** Object:  Table [dbo].[Sessions]    Script Date: 22/01/2021 23:19:52 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Sessions]') AND type in (N'U'))
 DROP TABLE [dbo].[Sessions]
 GO
 
-/****** Object:  Table [dbo].[Sessions]    Script Date: 22/01/2021 18:48:55 ******/
+/****** Object:  Table [dbo].[Sessions]    Script Date: 22/01/2021 23:19:52 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -246,5 +182,81 @@ REFERENCES [dbo].[Users] ([Id])
 GO
 
 ALTER TABLE [dbo].[Sessions] CHECK CONSTRAINT [FK_Sessions_Sessions_Users]
+GO
+
+USE [MonsterTradingCardGame]
+GO
+
+ALTER TABLE [dbo].[Cards] DROP CONSTRAINT [FK_Cards_Cards_User]
+GO
+
+/****** Object:  Table [dbo].[Cards]    Script Date: 22/01/2021 23:19:58 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Cards]') AND type in (N'U'))
+DROP TABLE [dbo].[Cards]
+GO
+
+/****** Object:  Table [dbo].[Cards]    Script Date: 22/01/2021 23:19:58 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Cards](
+	[Id] [uniqueidentifier] NOT NULL,
+	[Name] [varchar](255) NOT NULL,
+	[Damage] [float] NOT NULL,
+	[Monster] [varchar](255) NULL,
+	[Element] [varchar](255) NOT NULL,
+	[IsSpell] [bit] NOT NULL,
+	[UserId] [uniqueidentifier] NULL,
+ CONSTRAINT [PK_Cards] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Cards]  WITH CHECK ADD  CONSTRAINT [FK_Cards_Cards_User] FOREIGN KEY([UserId])
+REFERENCES [dbo].[Users] ([Id])
+GO
+
+ALTER TABLE [dbo].[Cards] CHECK CONSTRAINT [FK_Cards_Cards_User]
+GO
+
+USE [MonsterTradingCardGame]
+GO
+
+ALTER TABLE [dbo].[Packages] DROP CONSTRAINT [FK_Packages_Packages_Cards]
+GO
+
+/****** Object:  Table [dbo].[Packages]    Script Date: 22/01/2021 23:20:07 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Packages]') AND type in (N'U'))
+DROP TABLE [dbo].[Packages]
+GO
+
+/****** Object:  Table [dbo].[Packages]    Script Date: 22/01/2021 23:20:07 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Packages](
+	[Id] [uniqueidentifier] NOT NULL,
+	[CardId] [uniqueidentifier] NOT NULL,
+ CONSTRAINT [PK_Packages] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC,
+	[CardId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Packages]  WITH CHECK ADD  CONSTRAINT [FK_Packages_Packages_Cards] FOREIGN KEY([CardId])
+REFERENCES [dbo].[Cards] ([Id])
+GO
+
+ALTER TABLE [dbo].[Packages] CHECK CONSTRAINT [FK_Packages_Packages_Cards]
 GO
 
