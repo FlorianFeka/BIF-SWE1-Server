@@ -70,7 +70,7 @@ namespace SocketTry.Handler
                 return;
             }
 
-            var recStr = Encoding.ASCII.GetString(_receiveBuffer);
+            var recStr = Encoding.UTF8.GetString(_receiveBuffer);
             Console.WriteLine(recStr);
 
 

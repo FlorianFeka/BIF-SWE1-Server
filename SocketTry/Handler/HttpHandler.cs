@@ -33,7 +33,7 @@ namespace SocketTry.Handler
                         var response = GetHandlerResult();
                         var answer = response.ToString();
                         Console.WriteLine(answer);
-                        var a = Encoding.ASCII.GetBytes(answer);
+                        var a = Encoding.UTF8.GetBytes(answer);
                         try
                         {
                             Send(a);
@@ -185,7 +185,7 @@ namespace SocketTry.Handler
 
         private bool TryGetLinesFromChunk(byte[] buffer, out string[] usableDataLines)
         {
-            var chunkData = Encoding.ASCII.GetString(buffer);
+            var chunkData = Encoding.UTF8.GetString(buffer);
             chunkData = chunkData.Replace("\r", "");
             chunkData = chunkData.Replace("\0", "");
 

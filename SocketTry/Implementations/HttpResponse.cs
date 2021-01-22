@@ -145,7 +145,7 @@ namespace SocketTry.Implementations
 
             if (ContentBytes?.Length > 0)
             {
-                stringBuilder.AppendLine(Encoding.ASCII.GetString(ContentBytes));
+                stringBuilder.AppendLine(Encoding.UTF8.GetString(ContentBytes));
             }
 
             return stringBuilder.ToString();
