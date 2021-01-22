@@ -101,21 +101,31 @@ namespace SocketTry.Handler
                 {
                     parameters = new object[] { };
                 }
-                result = handler.Value.Method.Invoke(controllerObject, parameters);
-                if(result != null)
+                try
                 {
-                    if (!(result is string))
+                    result = handler.Value.Method.Invoke(controllerObject, parameters);
+                    if (result != null)
                     {
-                        result = JsonSerializer.Serialize(result);
+                        if (!(result is string))
+                        {
+                            result = JsonSerializer.Serialize(result);
+                        }
+                    }
+                    else
+                    {
+                        result = "";
+                    }
+                    if (response.ContentBytes == null)
+                    {
+                        response.SetContent((result as string));
                     }
                 }
-                else
+                catch (Exception e)
                 {
-                    result = "";
-                }
-                if(response.ContentBytes == null)
-                {
-                    response.SetContent((result as string));
+                    response.SetStatus(HttpStatus.Internal_Server_Error);
+                    response.Headers[HttpMeta.Headers.CONNECTION] = "Closed";
+
+                    response.SetContent($"{e.Message}\n{e.StackTrace}");
                 }
             }
             else
