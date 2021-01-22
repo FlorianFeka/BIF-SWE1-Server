@@ -9,8 +9,7 @@ namespace MonsterTradingCardsGame.Test
         [Fact]
         public void Test1()
         {
-            var a = new UserService();
-            a.Test().Should().BeTrue();
+
         }
     }
 }
