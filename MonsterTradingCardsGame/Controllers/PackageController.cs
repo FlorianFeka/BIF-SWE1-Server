@@ -26,7 +26,7 @@ namespace MonsterTradingCardsGame.Controllers
         [HttpPost]
         public Package CreatePackage(CardDto[] cardsDto)
         {
-            if(Utils.InvalidAuth(_sessionService, HttpRequest, HttpResponse))
+            if(Utils.GetSession(_sessionService, HttpRequest, HttpResponse) == null)
             {
                 return null;
             }

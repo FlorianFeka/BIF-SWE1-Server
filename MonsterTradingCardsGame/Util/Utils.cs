@@ -1,4 +1,5 @@
-﻿using MonsterTradingCardsGame.Services;
+﻿using MonsterTradingCardsGame.Models.Sessions;
+using MonsterTradingCardsGame.Services;
 using SocketTry.Http;
 using SocketTry.Implementations;
 using System.Data;
@@ -8,21 +9,22 @@ namespace MonsterTradingCardsGame.Util
 {
     public static class Utils
     {
-        public static bool InvalidAuth(SessionService sessionService, HttpRequest request, HttpResponse response)
+        public static Session GetSession(SessionService sessionService, HttpRequest request, HttpResponse response)
         {
             if (!request.Headers.TryGetValue(HttpMeta.Headers.AUTHORIZATION, out var token))
             {
                 response.SetContent("No Authorization token!");
                 response.SetStatus(HttpStatus.Bad_Request);
-                return true;
+                return null;
             }
-            if (!sessionService.ValidSession(token))
+            var session = sessionService.ValidSession(token);
+            if (session == null)
             {
                 response.SetContent("Unauthorized!");
                 response.SetStatus(HttpStatus.Unauthorized);
-                return true;
+                return null;
             }
-            return false;
+            return session;
         }
         public static SqlParameter CreateSqlParameter(string parameterName, SqlDbType sqlDbType, int size, object value)
         {

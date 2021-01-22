@@ -19,7 +19,7 @@ namespace MonsterTradingCardsGame.Repository
             _userRepository = SingletonFactory.GetObject<UserRepository>();
         }
 
-        public bool ValidSession(string token)
+        public Session ValidSession(string token)
         {
             SqlCommand command = new SqlCommand(_getSessionWithToken, _connection.GetConnection());
             command.Parameters.Add(Utils.CreateSqlParameter("@Token", SqlDbType.VarChar, 255, token));
@@ -36,10 +36,10 @@ namespace MonsterTradingCardsGame.Repository
                 };
                 if(DateTime.Now < session.ExpiryDate)
                 {
-                    return true;
+                    return session;
                 }
             }
-            return false;
+            return null;
         }
 
         public Session SaveSession(User user)
