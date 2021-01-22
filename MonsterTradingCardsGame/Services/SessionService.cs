@@ -18,5 +18,10 @@ namespace MonsterTradingCardsGame.Services
         {
             return _sessionRepository.SaveSession(user);
         }
+
+        public bool ValidSession(string token)
+        {
+            return _sessionRepository.ValidSession(token);
+        }
     }
 }

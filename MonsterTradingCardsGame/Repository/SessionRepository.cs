@@ -19,7 +19,7 @@ namespace MonsterTradingCardsGame.Repository
             _userRepository = SingletonFactory.GetObject<UserRepository>();
         }
 
-        public bool CheckSession(string token)
+        public bool ValidSession(string token)
         {
             SqlCommand command = new SqlCommand(_getSessionWithToken, _connection.GetConnection());
             command.Parameters.Add(Utils.CreateSqlParameter("@Token", SqlDbType.VarChar, 255, token));

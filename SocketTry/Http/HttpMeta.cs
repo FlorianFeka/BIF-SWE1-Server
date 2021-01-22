@@ -7,6 +7,7 @@ namespace SocketTry.Http
         public const string VERSION = "HTTP/1.1";
         public static class Headers
         {
+            public const string AUTHORIZATION = "Authorization";
             public const string USER_AGENT = "User-Agent";
             public const string CONTENT_LENGTH = "Content-Length";
             public const string CONTENT_TYPE = "Content-Type";
