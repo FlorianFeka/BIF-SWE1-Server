@@ -73,7 +73,7 @@ namespace MonsterTradingCardsGame.Repository
         }
 
         private readonly string _createUserCommandString = "INSERT INTO [dbo].[Users] ([Id],[Username],[Password],[Bio],[Image],[Money])" +
-            "VALUES(@Id,@Username,@Password,@Bio,@Image,@Money);";
+            "VALUES (@Id,@Username,@Password,@Bio,@Image,@Money);";
 
         private readonly string _userExistsCommandString = "Select COUNT(*) FROM [dbo].[Users] WHERE [Username] = @Username";
 
