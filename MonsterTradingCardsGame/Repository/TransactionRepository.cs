@@ -50,7 +50,7 @@ namespace MonsterTradingCardsGame.Repository
             updateUsersMoneyCommand.Parameters.Add(Utils.CreateSqlParameter("@UserId", SqlDbType.UniqueIdentifier, 16, userId));
             updateUsersMoneyCommand.Parameters.Add(Utils.CreateSqlParameter("@Money", SqlDbType.Float, 16, Convert.ToDouble(user.Money - Package.PackageCost)));
             deletePackageWithIdCommand.Parameters.Add(Utils.CreateSqlParameter("@Id", SqlDbType.UniqueIdentifier, 16, packageId));
-            // execute and check if 5 rows were affected, if not rollback
+
             try
             {
                 if (updateCardOwnershipCommand.ExecuteNonQuery() != Package.PackageSize)

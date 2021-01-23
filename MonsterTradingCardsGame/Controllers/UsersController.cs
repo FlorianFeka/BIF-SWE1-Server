@@ -5,17 +5,16 @@ using SocketTry;
 using SocketTry.Attributes;
 using SocketTry.Attributes.Verbs;
 using SocketTry.Http;
-using System;
 
 namespace MonsterTradingCardsGame.Controllers
 {
     [Route("/users")]
     [Controller]
-    public class UserController : BaseController
+    public class UsersController : BaseController
     {
         private UserService _userService;
 
-        public UserController()
+        public UsersController()
         {
             _userService = SingletonFactory.GetObject<UserService>();
         }

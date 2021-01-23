@@ -11,12 +11,12 @@ namespace MonsterTradingCardsGame.Controllers
 {
     [Route("/packages")]
     [Controller]
-    public class PackageController : BaseController
+    public class PackagesController : BaseController
     {
         private SessionService _sessionService;
         private PackageService _packageService;
 
-        public PackageController()
+        public PackagesController()
         {
             _sessionService = SingletonFactory.GetObject<SessionService>();
             _packageService = SingletonFactory.GetObject<PackageService>();
