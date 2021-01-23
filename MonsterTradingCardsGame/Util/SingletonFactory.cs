@@ -6,7 +6,7 @@ namespace MonsterTradingCardsGame.Util
     // Really just here so the Database Connection is continues and only is closed with the application
     public static class SingletonFactory
     {
-        public static Dictionary<Type, object> singletons = new Dictionary<Type, object>();
+        private static Dictionary<Type, object> singletons = new Dictionary<Type, object>();
 
         public static T GetObject<T>()
         {
