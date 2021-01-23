@@ -1,5 +1,4 @@
 ﻿using MonsterTradingCardsGame.Models;
-using MonsterTradingCardsGame.Models.Sessions;
 using MonsterTradingCardsGame.Repository;
 using MonsterTradingCardsGame.Util;
 

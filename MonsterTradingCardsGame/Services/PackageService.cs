@@ -1,5 +1,4 @@
-﻿using MonsterTradingCardsGame.Models.Cards;
-using MonsterTradingCardsGame.Models.Packages;
+﻿using MonsterTradingCardsGame.Models;
 using MonsterTradingCardsGame.Repository;
 using MonsterTradingCardsGame.Util;
 

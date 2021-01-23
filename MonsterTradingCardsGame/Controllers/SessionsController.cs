@@ -1,5 +1,4 @@
 ﻿using MonsterTradingCardsGame.Models;
-using MonsterTradingCardsGame.Models.Sessions;
 using MonsterTradingCardsGame.Services;
 using MonsterTradingCardsGame.Util;
 using SocketTry;
@@ -24,7 +23,7 @@ namespace MonsterTradingCardsGame.Controllers
         }
 
         [HttpPost]
-        public SessionDto CreateSession(User user)
+        public Session CreateSession(User user)
         {
             if (user == null || user.Username == null || user.Password == null)
             {
@@ -42,11 +41,7 @@ namespace MonsterTradingCardsGame.Controllers
                     return null;
                 }
                 var session = _sessionService.SaveSession(fetchedUser);
-                return new SessionDto
-                {
-                    Token = session.Token,
-                    ExpiryDate = session.ExpiryDate,
-                };
+                return session;
             }
             catch(Exception e)
             {

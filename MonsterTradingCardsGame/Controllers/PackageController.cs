@@ -1,5 +1,4 @@
-﻿using MonsterTradingCardsGame.Models.Cards;
-using MonsterTradingCardsGame.Models.Packages;
+﻿using MonsterTradingCardsGame.Models;
 using MonsterTradingCardsGame.Services;
 using MonsterTradingCardsGame.Util;
 using SocketTry;
@@ -24,24 +23,14 @@ namespace MonsterTradingCardsGame.Controllers
         }
 
         [HttpPost]
-        public Package CreatePackage(CardDto[] cardsDto)
+        public Package CreatePackage(Card[] cards)
         {
             if(Utils.GetSession(_sessionService, HttpRequest, HttpResponse) == null)
             {
                 return null;
             }
-            var cards = cardsDto.Select(x =>
-            {
-                var card = new Card
-                {
-                    Id = x.Id,
-                    Name = x.Name,
-                    Damage = x.Damage,
-                };
-                card.SetTypes();
-                return card;
-            });
-            if (cardsDto == null || cardsDto.Length != 5)
+            cards.ToList().ForEach(x => x.SetTypes());
+            if (cards == null || cards.Length != 5)
             {
                 HttpResponse.SetContent("No cards or not the right amount of cards!");
                 HttpResponse.SetStatus(HttpStatus.Bad_Request);

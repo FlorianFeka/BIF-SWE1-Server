@@ -1,17 +1,23 @@
 ﻿using MonsterTradingCardsGame.Models.Types;
 using System;
 using System.Linq;
+using System.Text.Json.Serialization;
 
-namespace MonsterTradingCardsGame.Models.Cards
+namespace MonsterTradingCardsGame.Models
 {
     public class Card
     {
         public Guid Id { get; set; } = Guid.NewGuid();
         public string Name { get; set; }
         public double Damage { get; set; }
+
+        [JsonIgnore]
         public MonsterType? Monster { get; set; }
+        [JsonIgnore]
         public ElementType Element { get; set; } = ElementType.Normal;
+        [JsonIgnore]
         public bool IsSpell { get; set; }
+        [JsonIgnore]
         public Guid UserId { get; set; }
 
         public void SetTypes()

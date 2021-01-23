@@ -1,4 +1,4 @@
-﻿using MonsterTradingCardsGame.Models.Sessions;
+﻿using MonsterTradingCardsGame.Models;
 using MonsterTradingCardsGame.Services;
 using SocketTry.Http;
 using SocketTry.Implementations;

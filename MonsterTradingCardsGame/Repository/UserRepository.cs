@@ -8,7 +8,7 @@ namespace MonsterTradingCardsGame.Repository
 {
     public class UserRepository
     {
-        private DatabaseConnection _connection;
+        private readonly DatabaseConnection _connection;
 
         public UserRepository()
         {

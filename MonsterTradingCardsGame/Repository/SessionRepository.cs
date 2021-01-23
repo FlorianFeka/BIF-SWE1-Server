@@ -1,5 +1,4 @@
 ﻿using MonsterTradingCardsGame.Models;
-using MonsterTradingCardsGame.Models.Sessions;
 using MonsterTradingCardsGame.Util;
 using System;
 using System.Data;
@@ -9,14 +8,12 @@ namespace MonsterTradingCardsGame.Repository
 {
     public class SessionRepository
     {
-        private DatabaseConnection _connection;
-        private UserRepository _userRepository;
+        private readonly DatabaseConnection _connection;
         private int _expiryMinutes = 30;
 
         public SessionRepository()
         {
             _connection = SingletonFactory.GetObject<DatabaseConnection>();
-            _userRepository = SingletonFactory.GetObject<UserRepository>();
         }
 
         public Session ValidSession(string token)

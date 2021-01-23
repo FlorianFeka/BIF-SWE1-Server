@@ -1,5 +1,4 @@
-﻿using MonsterTradingCardsGame.Models.Cards;
-using MonsterTradingCardsGame.Models.Packages;
+﻿using MonsterTradingCardsGame.Models;
 using MonsterTradingCardsGame.Util;
 using System;
 using System.Data;
@@ -9,7 +8,7 @@ namespace MonsterTradingCardsGame.Repository
 {
     public class PackageRepository
     {
-        private DatabaseConnection _connection;
+        private readonly DatabaseConnection _connection;
         
         public PackageRepository()
         {
