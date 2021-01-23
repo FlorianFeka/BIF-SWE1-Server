@@ -72,6 +72,27 @@ namespace MonsterTradingCardsGame.Repository
             return user;
         }
 
+        public User GetUserWithId(Guid userId)
+        {
+            SqlCommand command = new SqlCommand(_selectUserWithIdCommandString, _connection.GetConnection());
+            command.Parameters.Add(Utils.CreateSqlParameter("@Id", SqlDbType.UniqueIdentifier, 16, userId));
+            command.Prepare();
+            using var reader = command.ExecuteReader();
+            if (reader.Read())
+            {
+                return new User
+                {
+                    Id = reader.GetGuid(0),
+                    Username = reader.GetString(1),
+                    Password = reader.GetString(2),
+                    Bio = reader.GetString(3),
+                    Image = reader.GetString(4),
+                    Money = reader.GetInt32(5),
+                };
+            }
+            return null;
+        }
+
         private readonly string _createUserCommandString = "INSERT INTO [dbo].[Users] ([Id],[Username],[Password],[Bio],[Image],[Money])" +
             "VALUES (@Id,@Username,@Password,@Bio,@Image,@Money);";
 
@@ -79,5 +100,7 @@ namespace MonsterTradingCardsGame.Repository
 
         private readonly string _selectUserWithUsernameCommandString = "Select [Id], [Username], [Password], [Bio], [Image], [Money]" +
             "FROM[dbo].[Users] WHERE[Username] = @Username";
+        private readonly string _selectUserWithIdCommandString = "Select [Id], [Username], [Password], [Bio], [Image], [Money]" +
+            "FROM[dbo].[Users] WHERE[Id] = @Id";
     }
 }
