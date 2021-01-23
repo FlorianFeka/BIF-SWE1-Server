@@ -12,7 +12,7 @@ namespace MonsterTradingCardsGame.Controllers
     [Controller]
     public class UsersController : BaseController
     {
-        private UserService _userService;
+        private readonly UserService _userService;
 
         public UsersController()
         {

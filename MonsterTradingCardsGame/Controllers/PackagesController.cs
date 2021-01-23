@@ -13,8 +13,8 @@ namespace MonsterTradingCardsGame.Controllers
     [Controller]
     public class PackagesController : BaseController
     {
-        private SessionService _sessionService;
-        private PackageService _packageService;
+        private readonly SessionService _sessionService;
+        private readonly PackageService _packageService;
 
         public PackagesController()
         {
