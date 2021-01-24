@@ -1,7 +1,7 @@
 ﻿using MonsterTradingCardsGame.Models;
 using MonsterTradingCardsGame.Services;
-using SocketTry.Http;
-using SocketTry.Implementations;
+using SimpleServer.Http;
+using SimpleServer.Implementations;
 using System.Data;
 using System.Data.SqlClient;
 

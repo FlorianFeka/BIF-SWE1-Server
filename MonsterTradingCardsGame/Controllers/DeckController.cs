@@ -1,10 +1,10 @@
 ﻿using MonsterTradingCardsGame.Models;
 using MonsterTradingCardsGame.Services;
 using MonsterTradingCardsGame.Util;
-using SocketTry;
-using SocketTry.Attributes;
-using SocketTry.Attributes.Verbs;
-using SocketTry.Http;
+using SimpleServer;
+using SimpleServer.Attributes;
+using SimpleServer.Attributes.Verbs;
+using SimpleServer.Http;
 using System;
 using System.Linq;
 

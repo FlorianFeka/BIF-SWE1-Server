@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SocketTry\SocketTry.csproj" />
+    <ProjectReference Include="..\SimpleServer\SimpleServer.csproj" />
   </ItemGroup>
 
 </Project>
