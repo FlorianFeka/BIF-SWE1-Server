@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Text;
 
 namespace MonsterTradingCardsGame.Repository
 {
@@ -23,6 +22,7 @@ namespace MonsterTradingCardsGame.Repository
         public Deck CreateDeck(Guid userId, Guid[] cardIds)
         {
             if (cardIds.Length != Deck.DeckSize) throw new Exception($"Number of cards not equivalent to deck size ({Deck.DeckSize})");
+            DeleteDeck(userId);
             var deck = new Deck();
             using var sqlTransaction = _connection.GetConnection().BeginTransaction();
             SqlCommand createDeckCommand = new SqlCommand(_createDeckCommandString, _connection.GetConnection());
@@ -74,8 +74,17 @@ namespace MonsterTradingCardsGame.Repository
                     Element = Enum.Parse<ElementType>(reader.GetString(4), true),
                     IsSpell = reader.GetBoolean(5)
                 };
+                cards.Add(card);
             }
             return cards.ToArray();
+        }
+
+        public void DeleteDeck(Guid userId)
+        {
+            SqlCommand command = new SqlCommand(_deleteDeckWithUserIdCommandString, _connection.GetConnection());
+            command.Parameters.Add(Utils.CreateSqlParameter("@UserId", SqlDbType.UniqueIdentifier, 16, userId));
+            command.Prepare();
+            command.ExecuteNonQuery();
         }
 
         private readonly string _createDeckCommandString = "INSERT INTO [dbo].[Deck] ([UserId],[CardId])" +
@@ -86,5 +95,7 @@ namespace MonsterTradingCardsGame.Repository
             "WHERE [Id] IN (SELECT [CardId]" +
             "FROM [MonsterTradingCardGame].[dbo].[Deck]" +
             "WHERE [UserId] = @UserId)";
+
+        private readonly string _deleteDeckWithUserIdCommandString = "DELETE FROM [dbo].[Deck] WHERE [UserId] = @UserId";
     }
 }

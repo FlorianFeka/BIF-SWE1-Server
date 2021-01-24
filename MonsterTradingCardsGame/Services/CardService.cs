@@ -3,7 +3,6 @@ using MonsterTradingCardsGame.Repository;
 using MonsterTradingCardsGame.Util;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace MonsterTradingCardsGame.Services
 {
@@ -19,6 +18,11 @@ namespace MonsterTradingCardsGame.Services
         public IEnumerable<Card> GetCards(Guid userId)
         {
             return _cardRepository.GetCards(userId);
+        }
+
+        public bool CardExists(Guid cardId)
+        {
+            return _cardRepository.CardExists(cardId);
         }
     }
 }
