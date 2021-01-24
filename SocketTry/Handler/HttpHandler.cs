@@ -134,7 +134,7 @@ namespace SocketTry.Handler
                 response.SetStatus(HttpStatus.Not_Found);
                 response.Headers[HttpMeta.Headers.CONNECTION] = "Closed";
 
-                response.SetContent($"Couldn't find route: {_httpRequest.Url.Path}");
+                response.SetContent($"Couldn't find route: {_httpRequest.Method} - {_httpRequest.Url.Path}");
             }
 
             return response;
