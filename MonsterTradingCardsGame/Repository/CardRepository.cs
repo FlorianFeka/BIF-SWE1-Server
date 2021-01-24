@@ -16,6 +16,23 @@ namespace MonsterTradingCardsGame.Repository
             _connection = SingletonFactory.GetObject<DatabaseConnection>();
         }
 
+        public bool CardExists(Guid cardId)
+        {
+            SqlCommand command = new SqlCommand(_cardExistsCommandString, _connection.GetConnection());
+            command.Parameters.Add(Utils.CreateSqlParameter("@Id", SqlDbType.UniqueIdentifier, 16, cardId));
+            command.Prepare();
+            using var reader = command.ExecuteReader();
+            if (reader.Read())
+            {
+                var count = reader[0] as int?;
+                if (count.HasValue && count.Value > 0)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public IEnumerable<Card> GetCards(Guid userId)
         {
             var cards = new List<Card>();
@@ -37,5 +54,7 @@ namespace MonsterTradingCardsGame.Repository
 
         private readonly string _getCardsFromUserCommandString = "SELECT [Id],[Name],[Damage]" +
             "FROM [MonsterTradingCardGame].[dbo].[Cards] WHERE [UserId] = @UserId;";
+
+        private readonly string _cardExistsCommandString = "Select COUNT(*) FROM [dbo].[Cards] WHERE [Id] = @Id";
     }
 }

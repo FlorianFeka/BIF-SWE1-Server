@@ -40,7 +40,6 @@ namespace MonsterTradingCardsGame.Controllers
                 return e.Message;
             }
             
-            HttpResponse.SetStatus(HttpStatus.OK);
             return "Package bought!";
         }
     }

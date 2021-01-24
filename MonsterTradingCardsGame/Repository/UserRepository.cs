@@ -43,10 +43,6 @@ namespace MonsterTradingCardsGame.Repository
                     return true;
                 }
             }
-            else
-            {
-                throw new Exception("Read for existing didn't have any rows (always should have one row and column)!");
-            }
             return false;
         }
 
@@ -100,6 +96,7 @@ namespace MonsterTradingCardsGame.Repository
 
         private readonly string _selectUserWithUsernameCommandString = "Select [Id], [Username], [Password], [Bio], [Image], [Money]" +
             "FROM[dbo].[Users] WHERE[Username] = @Username";
+
         private readonly string _selectUserWithIdCommandString = "Select [Id], [Username], [Password], [Bio], [Image], [Money]" +
             "FROM[dbo].[Users] WHERE[Id] = @Id";
     }

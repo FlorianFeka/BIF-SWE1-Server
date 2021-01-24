@@ -30,9 +30,9 @@ namespace MonsterTradingCardsGame.Controllers
                 return null;
             }
             cards.ToList().ForEach(x => x.SetTypes());
-            if (cards == null || cards.Length != 5)
+            if (cards == null || cards.Length != Package.PackageSize)
             {
-                HttpResponse.SetContent("No cards or not the right amount of cards!");
+                HttpResponse.SetContent($"No cards or not the right amount of cards! The right amount: {Package.PackageSize}.");
                 HttpResponse.SetStatus(HttpStatus.Bad_Request);
                 return null;
             }

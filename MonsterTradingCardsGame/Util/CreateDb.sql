@@ -1,11 +1,11 @@
 ﻿USE [master]
 GO
 
-/****** Object:  Database [MonsterTradingCardGame]    Script Date: 22/01/2021 23:18:50 ******/
+/****** Object:  Database [MonsterTradingCardGame]    Script Date: 23/01/2021 23:20:41 ******/
 DROP DATABASE [MonsterTradingCardGame]
 GO
 
-/****** Object:  Database [MonsterTradingCardGame]    Script Date: 22/01/2021 23:18:50 ******/
+/****** Object:  Database [MonsterTradingCardGame]    Script Date: 23/01/2021 23:20:41 ******/
 CREATE DATABASE [MonsterTradingCardGame]
  CONTAINMENT = NONE
  ON  PRIMARY 
@@ -113,16 +113,15 @@ GO
 ALTER DATABASE [MonsterTradingCardGame] SET  READ_WRITE 
 GO
 
-
 USE [MonsterTradingCardGame]
 GO
 
-/****** Object:  Table [dbo].[Users]    Script Date: 22/01/2021 23:19:43 ******/
+/****** Object:  Table [dbo].[Users]    Script Date: 23/01/2021 23:20:52 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Users]') AND type in (N'U'))
 DROP TABLE [dbo].[Users]
 GO
 
-/****** Object:  Table [dbo].[Users]    Script Date: 22/01/2021 23:19:43 ******/
+/****** Object:  Table [dbo].[Users]    Script Date: 23/01/2021 23:20:52 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -153,12 +152,12 @@ GO
 ALTER TABLE [dbo].[Sessions] DROP CONSTRAINT [FK_Sessions_Sessions_Users]
 GO
 
-/****** Object:  Table [dbo].[Sessions]    Script Date: 22/01/2021 23:19:52 ******/
+/****** Object:  Table [dbo].[Sessions]    Script Date: 23/01/2021 23:21:00 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Sessions]') AND type in (N'U'))
 DROP TABLE [dbo].[Sessions]
 GO
 
-/****** Object:  Table [dbo].[Sessions]    Script Date: 22/01/2021 23:19:52 ******/
+/****** Object:  Table [dbo].[Sessions]    Script Date: 23/01/2021 23:21:00 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -190,12 +189,12 @@ GO
 ALTER TABLE [dbo].[Cards] DROP CONSTRAINT [FK_Cards_Cards_User]
 GO
 
-/****** Object:  Table [dbo].[Cards]    Script Date: 22/01/2021 23:19:58 ******/
+/****** Object:  Table [dbo].[Cards]    Script Date: 23/01/2021 23:21:10 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Cards]') AND type in (N'U'))
 DROP TABLE [dbo].[Cards]
 GO
 
-/****** Object:  Table [dbo].[Cards]    Script Date: 22/01/2021 23:19:58 ******/
+/****** Object:  Table [dbo].[Cards]    Script Date: 23/01/2021 23:21:10 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -230,12 +229,12 @@ GO
 ALTER TABLE [dbo].[Packages] DROP CONSTRAINT [FK_Packages_Packages_Cards]
 GO
 
-/****** Object:  Table [dbo].[Packages]    Script Date: 22/01/2021 23:20:07 ******/
+/****** Object:  Table [dbo].[Packages]    Script Date: 23/01/2021 23:21:17 ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Packages]') AND type in (N'U'))
 DROP TABLE [dbo].[Packages]
 GO
 
-/****** Object:  Table [dbo].[Packages]    Script Date: 22/01/2021 23:20:07 ******/
+/****** Object:  Table [dbo].[Packages]    Script Date: 23/01/2021 23:21:17 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -258,5 +257,51 @@ REFERENCES [dbo].[Cards] ([Id])
 GO
 
 ALTER TABLE [dbo].[Packages] CHECK CONSTRAINT [FK_Packages_Packages_Cards]
+GO
+
+USE [MonsterTradingCardGame]
+GO
+
+ALTER TABLE [dbo].[Deck] DROP CONSTRAINT [FK_Deck_Deck_user]
+GO
+
+ALTER TABLE [dbo].[Deck] DROP CONSTRAINT [FK_Deck_Deck_Card]
+GO
+
+/****** Object:  Table [dbo].[Deck]    Script Date: 23/01/2021 23:29:17 ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Deck]') AND type in (N'U'))
+DROP TABLE [dbo].[Deck]
+GO
+
+/****** Object:  Table [dbo].[Deck]    Script Date: 23/01/2021 23:29:17 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Deck](
+	[UserId] [uniqueidentifier] NOT NULL,
+	[CardId] [uniqueidentifier] NOT NULL,
+ CONSTRAINT [PK_Deck] PRIMARY KEY CLUSTERED 
+(
+	[UserId] ASC,
+	[CardId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Deck]  WITH CHECK ADD  CONSTRAINT [FK_Deck_Deck_Card] FOREIGN KEY([CardId])
+REFERENCES [dbo].[Cards] ([Id])
+GO
+
+ALTER TABLE [dbo].[Deck] CHECK CONSTRAINT [FK_Deck_Deck_Card]
+GO
+
+ALTER TABLE [dbo].[Deck]  WITH CHECK ADD  CONSTRAINT [FK_Deck_Deck_user] FOREIGN KEY([UserId])
+REFERENCES [dbo].[Users] ([Id])
+GO
+
+ALTER TABLE [dbo].[Deck] CHECK CONSTRAINT [FK_Deck_Deck_user]
 GO
 
