@@ -119,11 +119,6 @@ namespace MonsterTradingCardsGame.Repository
             return null;
         }
 
-        private void OverwriteUser(User baseUser, User overwrittenUser)
-        {
-
-        }
-
         private readonly string _createUserCommandString = "INSERT INTO [dbo].[Users] ([Id],[Username],[Password],[Bio],[Image],[Money])" +
             "VALUES (@Id,@Username,@Password,@Bio,@Image,@Money);";
 
