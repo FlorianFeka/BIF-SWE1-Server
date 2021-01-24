@@ -28,6 +28,21 @@ namespace MonsterTradingCardsGame.Services
             return user;
         }
 
+        public User UpdateUser(User user)
+        {
+            return _userRepository.UpdateUser(user);
+        }
+
+        public User GetUserWithId(Guid userId)
+        {
+            return _userRepository.GetUserWithId(userId);
+        }
+
+        public User GetUserWithUsername(string username)
+        {
+            return _userRepository.GetUserWithUsername(username);
+        }
+
         public bool CreateUser(User user)
         {
             return _userRepository.CreateUser(user);

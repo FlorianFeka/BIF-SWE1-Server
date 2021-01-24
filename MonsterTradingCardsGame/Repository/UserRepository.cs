@@ -21,8 +21,8 @@ namespace MonsterTradingCardsGame.Repository
             command.Parameters.Add(Utils.CreateSqlParameter("@Id", SqlDbType.UniqueIdentifier, 16, user.Id));
             command.Parameters.Add(Utils.CreateSqlParameter("@Username", SqlDbType.VarChar, 255, user.Username));
             command.Parameters.Add(Utils.CreateSqlParameter("@Password", SqlDbType.VarChar, 255, user.Password));
-            command.Parameters.Add(Utils.CreateSqlParameter("@Bio", SqlDbType.VarChar, 255, user.Bio != null ? user.Bio : ""));
-            command.Parameters.Add(Utils.CreateSqlParameter("@Image", SqlDbType.VarChar, 255, user.Image != null ? user.Image : ""));
+            command.Parameters.Add(Utils.CreateSqlParameter("@Bio", SqlDbType.VarChar, 255, user.Bio ?? ""));
+            command.Parameters.Add(Utils.CreateSqlParameter("@Image", SqlDbType.VarChar, 255, user.Image ?? ""));
             command.Parameters.Add(Utils.CreateSqlParameter("@Money", SqlDbType.Int, 4, user.Money));
             command.Prepare();
             var rowsAdded = command.ExecuteNonQuery();
@@ -89,6 +89,41 @@ namespace MonsterTradingCardsGame.Repository
             return null;
         }
 
+        public User UpdateUser(User user)
+        {
+            var fetchUser = GetUserWithId(user.Id);
+            var updatedUser = new User
+            {
+                Id = user.Id,
+                Username = user.Username ?? fetchUser.Username,
+                Password = user.Password ?? fetchUser.Password,
+                Bio = user.Bio ?? fetchUser.Bio,
+                Image = user.Image ?? fetchUser.Image,
+                Money = fetchUser.Money
+            };
+            SqlCommand command = new SqlCommand(_updateUserWithIdCommandString, _connection.GetConnection());
+            
+            command.Parameters.Add(Utils.CreateSqlParameter("@Id", SqlDbType.UniqueIdentifier, 16, updatedUser.Id));
+            command.Parameters.Add(Utils.CreateSqlParameter("@Username", SqlDbType.VarChar, 255, updatedUser.Username));
+            command.Parameters.Add(Utils.CreateSqlParameter("@Password", SqlDbType.VarChar, 255, updatedUser.Password));
+            command.Parameters.Add(Utils.CreateSqlParameter("@Bio", SqlDbType.VarChar, 255, updatedUser.Bio ?? ""));
+            command.Parameters.Add(Utils.CreateSqlParameter("@Image", SqlDbType.VarChar, 255, updatedUser.Image ?? ""));
+            command.Prepare();
+            var rowsAdded = command.ExecuteNonQuery();
+
+            if(rowsAdded == 1)
+            {
+                return updatedUser;
+            }
+
+            return null;
+        }
+
+        private void OverwriteUser(User baseUser, User overwrittenUser)
+        {
+
+        }
+
         private readonly string _createUserCommandString = "INSERT INTO [dbo].[Users] ([Id],[Username],[Password],[Bio],[Image],[Money])" +
             "VALUES (@Id,@Username,@Password,@Bio,@Image,@Money);";
 
@@ -99,5 +134,9 @@ namespace MonsterTradingCardsGame.Repository
 
         private readonly string _selectUserWithIdCommandString = "Select [Id], [Username], [Password], [Bio], [Image], [Money]" +
             "FROM[dbo].[Users] WHERE[Id] = @Id";
+
+        private readonly string _updateUserWithIdCommandString = "UPDATE [dbo].[Users]" +
+            "SET [Username] = @Username,[Password] = @Password,[Bio] = @Bio,[Image] = @Image " +
+            "WHERE [Id] = @Id";
     }
 }
