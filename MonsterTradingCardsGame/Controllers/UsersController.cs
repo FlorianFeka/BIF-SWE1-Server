@@ -22,7 +22,7 @@ namespace MonsterTradingCardsGame.Controllers
         }
 
         [HttpGet("{username}")]
-        public User GetUser(string username)
+        public UserDto GetUser(string username)
         {
             var session = Utils.GetSession(_sessionService, HttpRequest, HttpResponse);
             if (session == null)
@@ -47,11 +47,11 @@ namespace MonsterTradingCardsGame.Controllers
                 return null;
             }
 
-            return userFromUsername;
+            return new UserDto(userFromUsername);
         }
 
         [HttpPut("{username}")]
-        public User UpdateUser(string username, User user)
+        public UserDto UpdateUser(string username, User user)
         {
             var session = Utils.GetSession(_sessionService, HttpRequest, HttpResponse);
             if (session == null)
@@ -84,11 +84,11 @@ namespace MonsterTradingCardsGame.Controllers
                 return null;
             }
 
-            return updatedUser;
+            return new UserDto(updatedUser);
         }
 
         [HttpPost]
-        public User CreateUser(User user)
+        public UserDto CreateUser(User user)
         {
             if(user == null || user.Username == null || user.Password == null)
             {
@@ -106,7 +106,7 @@ namespace MonsterTradingCardsGame.Controllers
             {
                 HttpResponse.SetStatus(HttpStatus.Created);
             }
-            return user;
+            return new UserDto(user);
         }
     }
 }
