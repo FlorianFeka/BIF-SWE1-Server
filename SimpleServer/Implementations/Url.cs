@@ -1,4 +1,5 @@
 ﻿using SimpleServer.Interfaces;
+using System;
 using System.Collections.Generic;
 
 namespace SimpleServer.Implementations
@@ -7,6 +8,7 @@ namespace SimpleServer.Implementations
     {
         public Url(string rawUrl)
         {
+            if (rawUrl == null) throw new ArgumentNullException(nameof(rawUrl));
             RawUrl = rawUrl;
             var startIndex = RawUrl.IndexOf("/");
             var parameterIndex = RawUrl.IndexOf("?");

@@ -1,11 +1,19 @@
 ﻿using FluentAssertions;
 using SimpleServer.Implementations;
+using System;
 using Xunit;
 
 namespace SimpleServer.Test.Implementations
 {
     public class Url_Test
     {
+        [Fact]
+        public void UrlConstructor_NullUrl_ShouldParseCorrectly()
+        {
+            Action act = () => new Url(null);
+            act.Should().Throw<ArgumentNullException>();
+        }
+
         [Fact]
         public void UrlConstructor_BlankUrl_ShouldParseCorrectly()
         {
