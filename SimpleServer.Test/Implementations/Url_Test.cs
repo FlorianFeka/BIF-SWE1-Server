@@ -8,7 +8,7 @@ namespace SimpleServer.Test.Implementations
     public class Url_Test
     {
         [Fact]
-        public void UrlConstructor_NullUrl_ShouldParseCorrectly()
+        public void UrlConstructor_NullUrl_ShouldThrowArgumentNullException()
         {
             Action act = () => new Url(null);
             act.Should().Throw<ArgumentNullException>();
